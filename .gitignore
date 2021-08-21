@@ -2,3 +2,4 @@ Build
 *.exe
 *.exp
 *.lib
+*.pdb
