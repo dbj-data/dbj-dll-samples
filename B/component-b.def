@@ -1,0 +1,3 @@
+EXPORTS
+dbj_component_can_unload_now      PRIVATE
+dbj_component_get_implementation  PRIVATE
