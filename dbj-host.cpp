@@ -19,14 +19,17 @@
 static void show_component_info(const char *const component_dll_name)
 {
   using ::dbj::win::dll_call;
+
   dll_call<DBJ_COMPONENT_SEMVER_FP>(component_dll_name,
-                                    DBJ_COMPONENT_FACTORYNAME,
+                                    DBJ_COMPONENT_SEMVER_NAME,
+                                    // return type can not be void
                                     [&](DBJ_COMPONENT_SEMVER_FP get_version)
                                     {
                                       dbj_component_version info_ = get_version();
-                                      DBG_PRINT("component dll: %s, version info", component_dll_name);
-                                      DBG_PRINT("Major: %d, minor: %d, patch: %d", info_.major, info_.minor, info_.patch);
-                                      DBG_PRINT("Description: %s", info_.description);
+                                      DBG_PRINT("\ncomponent dll: %s, version info", component_dll_name);
+                                      DBG_PRINT("\nMajor: %d, minor: %d, patch: %d", info_.major, info_.minor, info_.patch);
+                                      DBG_PRINT("\nDescription: %s", info_.description);
+                                      return true;
                                     });
 }
 /* ----------------------------------------------------------------------------------------------- */
@@ -80,7 +83,7 @@ int main(int argc, char **argv)
                        return the_component->connection_string(the_component);
                      });
 
-    DBG_PRINT("connection string: %s", connstr_.data);
+    DBG_PRINT("\nconnection string: %s\n", connstr_.data);
   }
   return 0;
 }

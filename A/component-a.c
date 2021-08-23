@@ -10,7 +10,7 @@ DBJ_COMPONENT_VERSION_IMPLEMENTATION(0,1,0,"dbj component A");
 /* --------------------------------------------------------------------------------- */
 // dbj_component_can_unload_now() is part of dbj-component definition
 // it is also generted here
-#define DBJ_COMPONENT_UNLOADER_IMPLEMENTATION ;
+DBJ_COMPONENT_UNLOADER_IMPLEMENTATION ;
 /* --------------------------------------------------------------------------------- */
 
 

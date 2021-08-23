@@ -85,7 +85,7 @@ typedef struct dbj_component_version_
     dbj_component_version dbj_component_get_version(void)              \
     {                                                                  \
         static bool done_ = false;                                     \
-        static dbj_component_version the_version_ = {M, N, P, 0};      \
+        static dbj_component_version the_version_ = {M, N, P, {0}};      \
         if (!done_)                                                    \
         {                                                              \
             strncpy_s(the_version_.description, 0xFF, S_, strlen(S_)); \
