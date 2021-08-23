@@ -1,36 +1,29 @@
 #include "component-b.h"
+#include "../dbj-component.h"
+#include "../dbj-component-string.h"
 //
 #include <string.h>
 #include <intrin.h>
 
-static volatile long component_counter_ = 0;
-//
-__attribute__((constructor)) static void component_ctor(void)
+DBJ_COMPONENT_VERSION_IMPLEMENTATION(0,1,0,"dbj component B");
+/* --------------------------------------------------------------------------------- */
+// dbj_component_can_unload_now() is part of dbj-component definition
+// it is also generted here
+#define DBJ_COMPONENT_UNLOADER_IMPLEMENTATION ;
+/* --------------------------------------------------------------------------------- */
+// function definition
+// kept private to the componenta
+static dbj_component_string_1024 connection_string_(
+    struct component_b *self_ )
 {
-    _InterlockedIncrement(&component_counter_);
-}
+    dbj_component_string_1024 retval = {{0}};
 
-__attribute__((destructor)) static void component_dtor()
-{
-    _InterlockedDecrement(&component_counter_);
-}
-// each dbj component has this as an exported function
-bool dbj_component_can_unload_now(void)
-{
-    return component_counter_ == 0;
-}
-
-// specimen function definition
-// best kept private to the dll
-static void connection_string_(
-    struct component_b *self_,
-    const unsigned len_, char retval[static len_])
-{
     if (!self_)
-        return;
-    if (len_ < strlen(self_->data_))
-        return;
-    strncpy(retval, self_->data_, len_);
+        return retval ;
+
+    DBJ_COMPONENT_STRING_ASSIGN( retval, self_->data_) ;
+
+    return retval ;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////

@@ -1,30 +1,27 @@
 #include "component-a.h"
-//
+
+#include "../dbj-component.h"
+#include "../dbj-component-string.h"
+
 #include <intrin.h>
 
-static volatile long component_counter_ = 0;
-//
-__attribute__((constructor)) static void component_ctor(void)
-{
-    _InterlockedIncrement(&component_counter_);
-}
-
-__attribute__((destructor)) static void component_dtor()
-{
-    _InterlockedDecrement(&component_counter_);
-}
-// each dbj component has this as an exported function
-bool dbj_component_can_unload_now(void)
-{
-    return component_counter_ == 0;
-}
+// dbj_component_get_version() generated here
+DBJ_COMPONENT_VERSION_IMPLEMENTATION(0,1,0,"dbj component A");
+/* --------------------------------------------------------------------------------- */
+// dbj_component_can_unload_now() is part of dbj-component definition
+// it is also generted here
+#define DBJ_COMPONENT_UNLOADER_IMPLEMENTATION ;
+/* --------------------------------------------------------------------------------- */
 
 
 // specimen function definition
 // best kept private to the dll
 static int component_a_function_(struct component_a *self_)
 {
-    return self_->data_;
+    if (self_)
+       return self_->data_;
+
+    return 0 ;   
 }
 
 ///////////////////////////////////////////////////////////////////////////////////

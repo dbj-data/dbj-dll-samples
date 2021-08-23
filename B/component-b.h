@@ -20,12 +20,14 @@ extern "C" {
 // to the users of dbj-component 
 // the interface example
 
+#include "../dbj-component-string.h"
+
 struct component_b
 {
     const char * data_;
     // notice we do not return pointer made inside component space
-    // we use the one created in the caller space
-    void (*connection_string)(struct component_b *, const unsigned , char [static 1]);
+    // dbj_component_string_1024 is: struct { char data [1024]}
+    dbj_component_string_1024 (*connection_string)(struct component_b *);
 };
 
 // each dbj component has this as an exported function

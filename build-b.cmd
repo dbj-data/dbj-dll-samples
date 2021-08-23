@@ -11,6 +11,6 @@ set "sourcefilename=%sourcefoldername%%sourcebasename%"
 
 @rem /Zi -- debug builds + pdb file
 @rem /TC -- threat all as C
-clang-cl %sourcefilename%.c /nologo /Zi /TC /W3 /FoBuild\ /FeBuild\%sourcebasename%.dll /link /dll /def:%sourcefilename%.def
+clang-cl %sourcefilename%.c /nologo /D_DEBUG /Zi /TC /W3 /FoBuild\ /FeBuild\%sourcebasename%.dll /link /dll /def:%sourcefilename%.def
 
 endlocal
