@@ -18,19 +18,17 @@
 /* ----------------------------------------------------------------------------------------------- */
 // FP of the dbj_component_get_implementation
 // is different for each component
-typedef struct dbj_component_version (*DBJ_COMPONENT_SEMVER_FP)(void);
 static inline void get_version_cb(DBJ_COMPONENT_SEMVER_FP get_version)
 {
   dbj_component_version info_ = get_version();
   DBG_PRINT("\ncomponent dll version info");
   DBG_PRINT("\nMajor: %d, minor: %d, patch: %d", info_.major, info_.minor, info_.patch);
   DBG_PRINT("\nDescription: %s", info_.description);
-  return true;
 }
 /* ----------------------------------------------------------------------------------------------- */
-static void show_component_info(const char *const component_dll_name)
+static void show_component_info(const char component_dll_name[static 1])
 {
-  DBJCAPI_DLL_CALL(component_dll_name, DBJ_COMPONENT_SEMVER_NAME, DBJ_COMPONENT_SEMVER_FP);
+  DBJCAPI_DLL_CALL(component_dll_name, DBJ_COMPONENT_SEMVER_NAME, DBJ_COMPONENT_SEMVER_FP, get_version_cb);
 }
 /* ----------------------------------------------------------------------------------------------- */
 // FP of the dbj_component_get_implementation
@@ -62,9 +60,9 @@ static inline void component_a_factory(AFP factory)
 int main(int argc, char **argv)
 {
   show_component_info(COMPONENT_A_DLL_NAME);
-  DBJCAPI_DLL_CALL(COMPONENT_A_DLL_NAME, DBJ_COMPONENT_FACTORYNAME, AFP);
+  DBJCAPI_DLL_CALL(COMPONENT_A_DLL_NAME, DBJ_COMPONENT_FACTORYNAME, AFP, component_a_factory);
 
   show_component_info(COMPONENT_B_DLL_NAME);
-  DBJCAPI_DLL_CALL(COMPONENT_B_DLL_NAME, DBJ_COMPONENT_FACTORYNAME, BFP);
+  DBJCAPI_DLL_CALL(COMPONENT_B_DLL_NAME, DBJ_COMPONENT_FACTORYNAME, BFP, component_b_factory);
   return 0;
 }

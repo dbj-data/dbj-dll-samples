@@ -8,10 +8,10 @@
             "name": "Debug active file",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${fileDirname}\\Build\\${fileBasenameNoExtension}.exe",
+            "program": "${workspaceFolder}\\Build\\${fileBasenameNoExtension}.exe",
             "args": [],
             "stopAtEntry": true,
-            "cwd": "${fileDirname}",
+            "cwd": "${workspaceFolder}\\Build",
             "environment": [],
             "console": "externalTerminal",
             /* "preLaunchTask": "C/C++: cl.exe build active file" */
