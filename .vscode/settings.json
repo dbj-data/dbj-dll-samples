@@ -4,6 +4,7 @@
         "xstring": "cpp",
         "xutility": "cpp",
         "dbj-component.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "iosfwd": "cpp"
     }
 }
