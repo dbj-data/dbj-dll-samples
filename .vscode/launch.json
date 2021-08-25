@@ -13,7 +13,7 @@
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}\\Build",
             "environment": [],
-            "console": "externalTerminal",
+            "console": "externalTerminal"
             /* "preLaunchTask": "C/C++: cl.exe build active file" */
         }
     ]

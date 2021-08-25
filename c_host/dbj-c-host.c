@@ -1,3 +1,5 @@
+#define DBJ_CAPI_DEFAULT_LOG_IMPLEMENTATION
+#define DBJCAPI_DLL_CALLER_IMPLEMENTATION
 
 #include "../dbj_capi/cdebug.h"
 #include "../dbj-component.h"
@@ -10,7 +12,6 @@
 #define COMPONENT_A_DLL_NAME "component-a.dll"
 #define COMPONENT_B_DLL_NAME "component-b.dll"
 
-#define DBJCAPI_DLL_CALLER_IMPLEMENTATION
 #include "../dll_loader/dbj_dll_call.h"
 
 #include <assert.h>
@@ -59,10 +60,15 @@ static inline void component_a_factory(AFP factory)
 /* ----------------------------------------------------------------------------------------------- */
 int main(int argc, char **argv)
 {
+  DBJ_DLL_CALL_LOG("Starting: %s", argv[0]);
+
   show_component_info(COMPONENT_A_DLL_NAME);
   DBJCAPI_DLL_CALL(COMPONENT_A_DLL_NAME, DBJ_COMPONENT_FACTORYNAME, AFP, component_a_factory);
 
   show_component_info(COMPONENT_B_DLL_NAME);
   DBJCAPI_DLL_CALL(COMPONENT_B_DLL_NAME, DBJ_COMPONENT_FACTORYNAME, BFP, component_b_factory);
+
+  DBJ_DLL_CALL_LOG("Ending: %s", argv[0]);
+
   return 0;
 }

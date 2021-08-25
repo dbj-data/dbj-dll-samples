@@ -11,7 +11,7 @@ set "build=..\Build"
 
 @rem /Zi -- debug builds + pdb file
 @rem /TC -- threat all as C
-clang-cl %sourcefilename%.c /nologo /D_DEBUG /Zi /TC /W3 /Fo%build%\ /Fe%build%\%sourcebasename%.dll /link /dll /def:%sourcefilename%.def
+clang-cl %sourcefilename%.c /nologo  /MDd /D_DEBUG /Zi /TC /W3 /Fo%build%\ /Fe%build%\%sourcebasename%.dll /link /dll /def:%sourcefilename%.def
 
 @echo.
 @echo Done building: %build%\%sourcebasename%.dll
