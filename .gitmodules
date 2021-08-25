@@ -1,6 +1,3 @@
-[submodule "dll_loader"]
-	path = dll_loader
-	url = https://github.com/DBJDBJ/dbj_dll_user.git
 [submodule "dbj_capi"]
 	path = dbj_capi
 	url = https://github.com/dbj-data/dbj_capi.git
