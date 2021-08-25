@@ -16,7 +16,7 @@ DBJ_COMPONENT_UNLOADER_IMPLEMENTATION ;
 
 // specimen function definition
 // best kept private to the dll
-static int component_a_function_(struct component_a *self_)
+static int get42implementation(struct component_a *self_)
 {
     if (self_)
        return self_->data_;
@@ -26,7 +26,7 @@ static int component_a_function_(struct component_a *self_)
 
 ///////////////////////////////////////////////////////////////////////////////////
 // private instance of the interface is the component implementation
-static struct component_a componenet_implementation_ = { .data_ = 42, .function = component_a_function_ } ;
+static struct component_a componenet_implementation_ = { .data_ = 42, .get42 = get42implementation } ;
 
 
 // each dbj component must have exported function

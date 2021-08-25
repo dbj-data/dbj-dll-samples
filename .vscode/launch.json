@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug active file",
+            "name": "Debug ${workspaceFolder}\\Build\\${fileBasenameNoExtension}.exe",
             "type": "cppvsdbg",
             "request": "launch",
             "program": "${workspaceFolder}\\Build\\${fileBasenameNoExtension}.exe",
@@ -13,7 +13,7 @@
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}\\Build",
             "environment": [],
-            "console": "externalTerminal"
+            /* "console": "externalTerminal" */
             /* "preLaunchTask": "C/C++: cl.exe build active file" */
         }
     ]

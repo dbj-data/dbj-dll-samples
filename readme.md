@@ -51,7 +51,7 @@ For the factory function from a DLL aka "component" to be executed we need a fun
 
 Factory function does not have to be declared. It is defined by name in the `.def` file of the component and its full foot print is only implied.
 
-But we need it function pointer so that we cna use it when we load the component dll.
+But we need it function pointer so that we can use it when we load the component dll.
 ```cpp
 // component_a.h
 // factory function pointer declaration is required
