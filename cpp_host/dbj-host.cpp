@@ -39,7 +39,7 @@ int main(int argc, char **argv)
   // the dll is unloaded!
   using ::dbj::win::dll_call;
   {
-    // FP of the dbj_component_get_implementation
+    // FP of the dbj_component_factory
     // is different for each component
     typedef struct component_a *(*FP)(void);
 
@@ -65,7 +65,7 @@ int main(int argc, char **argv)
   }
   {
       show_component_info(COMPONENT_B_DLL_NAME);
-    // FP of the dbj_component_get_implementation
+    // FP of the dbj_component_factory
     // is different for each component
     typedef struct component_b *(*FP)(void);
     // again we could print the connstr_ from inside the lambda not outside

@@ -1,4 +1,4 @@
 EXPORTS
 dbj_component_can_unload_now      PRIVATE
-dbj_component_get_implementation  PRIVATE
-dbj_component_get_version         PRIVATE
+dbj_component_factory  PRIVATE
+dbj_component_version         PRIVATE

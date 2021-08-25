@@ -7,8 +7,8 @@ same def for all dll's:
 
 EXPORTS
 dbj_component_can_unload_now      PRIVATE
-dbj_component_get_implementation  PRIVATE
-dbj_component_get_version         PRIVATE
+dbj_component_factory  PRIVATE
+dbj_component_version         PRIVATE
 
 */
 
@@ -82,7 +82,7 @@ typedef struct dbj_component_version_
 } dbj_component_version;
 
 #define DBJ_COMPONENT_VERSION_IMPLEMENTATION(M, N, P, S_)              \
-    dbj_component_version dbj_component_get_version(void)              \
+    dbj_component_version dbj_component_version(void)              \
     {                                                                  \
         static bool done_ = false;                                     \
         static dbj_component_version the_version_ = {M, N, P, {0}};      \
@@ -102,8 +102,8 @@ same def for all dll's:
 
 EXPORTS
 dbj_component_can_unload_now      PRIVATE
-dbj_component_get_implementation  PRIVATE
-dbj_component_get_version         PRIVATE
+dbj_component_factory  PRIVATE
+dbj_component_version         PRIVATE
 
 each is exported in a def file for each component
 and is always the same name
@@ -111,8 +111,8 @@ regardless of the return type or arguments
 
 */
 #define DBJ_COMPONENT_UNLOAD_NAME "dbj_component_can_unload_now"
-#define DBJ_COMPONENT_FACTORYNAME "dbj_component_get_implementation"
-#define DBJ_COMPONENT_SEMVER_NAME "dbj_component_get_version"
+#define DBJ_COMPONENT_FACTORYNAME "dbj_component_factory"
+#define DBJ_COMPONENT_SEMVER_NAME "dbj_component_version"
 
 /*
 function footprints for these two are always the same

@@ -39,7 +39,7 @@ struct component_b
 // notice we do not return void *
 // we do not actually need this declaration
 // in this header
-// struct component_b *dbj_component_get_implementation(void);
+// struct component_b *dbj_component_factory(void);
 
 #ifdef __cplusplus
 } // extern "C" 

@@ -19,7 +19,7 @@
 #include <assert.h>
 #include <stdio.h>
 /* ----------------------------------------------------------------------------------------------- */
-// FP of the dbj_component_get_implementation
+// FP of the dbj_component_factory
 // is different for each component
 static inline void get_version_cb(DBJ_COMPONENT_SEMVER_FP get_version)
 {
@@ -34,7 +34,7 @@ static void show_component_info(const char component_dll_name[static 1])
   DBJCAPI_DLL_CALL(component_dll_name, DBJ_COMPONENT_SEMVER_NAME, DBJ_COMPONENT_SEMVER_FP, get_version_cb);
 }
 /* ----------------------------------------------------------------------------------------------- */
-// FP of the dbj_component_get_implementation
+// FP of the dbj_component_factory
 // is different for each component
 typedef struct component_b *(*BFP)(void);
 static inline void component_b_factory(BFP factory)
@@ -46,7 +46,7 @@ static inline void component_b_factory(BFP factory)
 }
 /* ----------------------------------------------------------------------------------------------- */
 // FP of the interface implementation factory
-// dbj_component_get_implementation()
+// dbj_component_factory()
 // is different for each component
 // because it returns pointer to the particular interface
 typedef struct component_a *(*AFP)(void);

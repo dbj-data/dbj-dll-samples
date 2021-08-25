@@ -33,9 +33,9 @@ static struct component_b
                                   .connection_string = connection_string_};
 
 // each dbj component must have exported function
-// with the name "dbj_component_get_implementation"
+// with the name "dbj_component_factory"
 // see the def file in this folder
-struct component_b *dbj_component_get_implementation(void)
+struct component_b *dbj_component_factory(void)
 {
     return &componenet_implementation_;
 }

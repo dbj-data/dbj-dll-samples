@@ -23,7 +23,7 @@ extern "C" {
 struct component_a
 {
     int data_;
-    int (*function)(struct component_a *);
+    int (*get42)(struct component_a *);
 };
 
 // each dbj component has this as an exported function
@@ -35,7 +35,7 @@ struct component_a
 // notice we do not return void *
 // we do not actually need this declaration
 // in this header
-// struct component_a *dbj_component_get_implementation(void);
+// struct component_a *dbj_component_factory(void);
 
 #ifdef __cplusplus
 } // extern "C" 
