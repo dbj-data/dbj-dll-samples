@@ -1,6 +1,8 @@
 #define DBJ_CAPI_DEFAULT_LOG_IMPLEMENTATION
 #define DBJCAPI_DLL_CALLER_IMPLEMENTATION
 
+#include "memory_info.h"
+
 #include "../dbj_capi/cdebug.h"
 #include "../dbj-component.h"
 #include "../dbj-component-string.h"
@@ -61,13 +63,14 @@ static inline void component_a_factory(AFP factory)
 int main(int argc, char **argv)
 {
   DBJ_DLL_CALL_LOG("Starting: %s", argv[0]);
+  dbjcapi_memory_info(stderr);
 
   show_component_info(COMPONENT_A_DLL_NAME);
   DBJCAPI_DLL_CALL(COMPONENT_A_DLL_NAME, DBJ_COMPONENT_FACTORYNAME, AFP, component_a_factory);
-
+  dbjcapi_memory_info(stderr);
   show_component_info(COMPONENT_B_DLL_NAME);
   DBJCAPI_DLL_CALL(COMPONENT_B_DLL_NAME, DBJ_COMPONENT_FACTORYNAME, BFP, component_b_factory);
-
+  dbjcapi_memory_info(stderr);
   DBJ_DLL_CALL_LOG("Ending: %s", argv[0]);
 
   return 0;
