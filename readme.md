@@ -1,11 +1,21 @@
 
 ![unsplash](unsplash/manuel.jpg)
 
+> In IT systems in general, the programming language is not of primary importance. Architecture is.
+>
+> IT system (not your desktop experiments) is made of components. Each component has a well-defined interface and set of operational requirements. E.g. size, speed, security, and such. If your component does meet operational requirements I really do not care if you have written it in Quick Basic, Julia, Rust, Elm, Awk, Bash Script or C++.
+>
+> Just after that, it will be rigorously tested for meeting the functional requirements and operational requirements.
+>
+> Also please do not (ever) forget the economy of IT systems: how much money will it take to develop it and more importantly how much money will it take to maintain what you did, and for the next 10+ years.
+
+&copy; 2020 Dec. by dbj at dbj dot org
+
 # DBJ COMPONENT SYSTEM&trade; (DBJCS)
 
 Why are today's OS-es component systems so complex, and difficult to use? Behind this very pompous name is attempt to architect and implement the simplest possible component system.
 
-Using only modern C and Windows DLL. 
+> Using only [standard C](http://www.open-std.org/jtc1/sc22/wg14/www/standards.html#9899) and Windows DLL. 
 
 If some "feature" is missing we can always pull the card of simplicity as an excuse. Let us see how far can we get.
 
