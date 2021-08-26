@@ -4,6 +4,8 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
+                /* without this VS Code will show squigless under includes even if they are on the PATH */
+                /* and it will not know to go to them                                                   */
                 "f:/machine_wide"
             ],
             "defines": [
