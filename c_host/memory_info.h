@@ -2,9 +2,9 @@
 #ifndef DBJ_MEMORY_INFO_INC
 #define DBJ_MEMORY_INFO_INC
 
-#include "../dbj_capi/ccommon.h"
-#include "../dbj_capi/cdebug.h"
-#include "../dbj_capi/dbj_windows_include.h"
+#include <dbj_capi/ccommon.h>
+#include <dbj_capi/cdebug.h>
+#include <dbj_capi/dbj_windows_include.h>
 // #include <windows.h> 
 // #include <stdio.h>
 #include <psapi.h>

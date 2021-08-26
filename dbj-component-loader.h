@@ -9,7 +9,7 @@ Here is dynamic dll loading and fetching a function from the said dll
 #define DBJCS_DLL_CALLER_IMPLEMENTATION  in exactly one place 
 */
 
-#include "dbj_capi/ccommon.h"
+#include <dbj_capi/ccommon.h>
 
 // ----------------------------------------------------------------
 DBJ_EXTERN_C_BEGIN
@@ -27,8 +27,8 @@ DBJ_EXTERN_C_END
 #ifdef DBJCS_DLL_CALLER_IMPLEMENTATION
 /// --------------------------------------------------------------
 
-#include "dbj_capi/cdebug.h"
-#include "dbj_capi/default_log.h"
+#include <dbj_capi/cdebug.h>
+#include <dbj_capi/default_log.h>
 
 #include <stdarg.h>
 #include <stdio.h>

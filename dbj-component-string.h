@@ -16,7 +16,7 @@ one dbj component == one dll == one component interface == one struct
    obviously wchar_t variant can and will be added as soon as it is required
 */
 
-#include "dbj_capi/ccommon.h"
+#include <dbj_capi/ccommon.h>
 #include <string.h>
 
 DBJ_EXTERN_C_BEGIN

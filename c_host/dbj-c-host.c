@@ -3,7 +3,7 @@
 
 #include "memory_info.h"
 
-#include "../dbj_capi/cdebug.h"
+#include <dbj_capi/cdebug.h>
 #include "../dbj-component.h"
 #include "../dbj-component-string.h"
 #include "../dbj-component-loader.h"

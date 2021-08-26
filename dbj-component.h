@@ -11,9 +11,8 @@ dbj_component_factory           PRIVATE
 dbj_component_version           PRIVATE
 
 */
-
-#include "dbj_capi/ccommon.h"
-#include "dbj_capi/dbj_windows_include.h"
+#include <dbj_capi/ccommon.h>
+#include <dbj_capi/dbj_windows_include.h>
 
 DBJ_EXTERN_C_BEGIN
 
