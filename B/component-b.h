@@ -7,20 +7,24 @@
 extern "C" {
 #endif // __cplusplus
 
+#ifndef HANDLE
+typedef void * HANDLE;
+#endif
+
 //  make sure build creates this dll for this component
 #define COMPONENT_B_DLL_NAME "component-b.dll"
 
 ///////////////////////////////////////////////////////////////////////////////////
-// one dll implements one component
-// one component has one interface
-// interface is a struct with data and function pointers
-// the interface struct for this component
+// proces wide SHMEM implemented in a DLL
 struct component_b
 {
-    const char * data_;
-    // notice we do not return pointer made inside component space
-    // dbj_component_string_1024 is: struct { char data [1024]}
-    dbj_component_string_1024 (*connection_string)(struct component_b *);
+    HANDLE (*create)(struct component_b * /* self_ */, dbj_component_string_64 /* key_ */, unsigned /*size*/ );
+    HANDLE (*delete)(struct component_b * /* self_ */, HANDLE /* handle_ */ );
+
+    bool (*set_value)(struct component_b * /* self_ */, HANDLE /* handle_ */, void  * /* value */ );
+    bool (*get_value)(struct component_b * /* self_ */, HANDLE /* handle_ */, void ** /* value */ );
+
+    // dbj_component_string_1024 (*create)(struct component_b *);
 };
 
 // we do not actually need this declaration in this header
