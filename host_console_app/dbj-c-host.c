@@ -30,16 +30,16 @@ static void show_component_info(const char component_dll_name[static 1])
   DBJCAPI_DLL_CALL(component_dll_name, DBJ_COMPONENT_SEMVER_NAME, DBJ_COMPONENT_SEMVER_FP, get_version_cb);
 }
 /* ----------------------------------------------------------------------------------------------- */
-
+// this is a callback, after its done DLL is unloaded
 static inline void component_b_user(component_b_factory_fp factory)
 {
   struct component_b *implementation = factory();
   dbj_component_string_1024 connstr_ =
       implementation->connection_string(implementation);
-  DBG_PRINT("\nconnection string: %s\n", connstr_.data);
+  DBG_PRINT("\nComponent B\nconnection string: %s\n", connstr_.data);
 }
 /* ----------------------------------------------------------------------------------------------- */
-
+// this is a callback, after its done DLL is unloaded
 static inline void component_a_user(component_a_factory_fp factory)
 {
   struct component_a *implementation = factory();
@@ -47,7 +47,10 @@ static inline void component_a_user(component_a_factory_fp factory)
   // with the following signature
   // int get42(component_a *) ;
   int fty2 = implementation->get42(implementation);
-  DBG_PRINT("fty2 : %d", fty2);
+  DBG_PRINT("\nComponent A\nfty2 : %d\n", fty2);
+    dbj_component_string_1024 connstr_ =
+      implementation->connection_string(implementation);
+  DBG_PRINT("\nconnection string: %s\n", connstr_.data);
 }
 /* ----------------------------------------------------------------------------------------------- */
 int main(int argc, char **argv)
