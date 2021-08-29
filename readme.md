@@ -11,7 +11,10 @@
 
 &copy; 2020 Dec. by dbj at dbj dot org
 
-# DBJ COMPONENT SYSTEM&trade; (DBJCS)
+![ ](unsplash/work_in_progres_raw.jpg)
+<center> <b>Work in Progress</b> </center>
+
+# DBJ COMPONENT SYSTEM&trade; aka DBJCS
 
 Why are today's OS-es component systems so complex, and difficult to use? Behind this very pompous name is attempt to architect and implement the simplest possible component system.
 
@@ -138,16 +141,22 @@ DBJCAPI_DLL_CALL(
 
 - Currently no UUID is really necessary
 - no central "entity" to (for example) deliver implementations etc. 
-- versioning use is a moot point
-    - instead of delivering 1..N versions from one component have 1..N components, one per version 
-    - that would mean a very many dll's
-      - instead we might mandate the version function that would return the semver strings
-- If using anything from Windows for do not go above `rpc.h` 
-  - MSRPC is the very foundation of Windows
-  - COM is 1993 OOA/OOD/OOP IPC 
+- If using anything from Windows for components do not go above `rpc.h` 
+
+## The History 
+  - First came OLE
+    - OLE was invented for MS Office integration
+  - COM and OLE are two separate "things"
+    - COM was also first used just in Office
+  - COM 1.0 was released 1993 
+    - The period when OOA/OOD/OOP where thought to be the "Final Solution"
   - COM is based on MSRPC
-  - it is legacy and it is a problem
+    - MSRPC is the DEC IPC implementation
+    - The very foundation of Windows NT
+  - COM is now a legacy and it is a problem
     - COM works just because of millions (or more?) man hours invested in it 
+  - .NET components (aks "Assemblies") and COM components are two separate "things"
+    - different architecture and different implementation
 
 ---
 
