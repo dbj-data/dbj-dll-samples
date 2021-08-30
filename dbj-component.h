@@ -111,9 +111,9 @@ and is always the same name
 regardless of the return type or arguments
 
 */
-#define DBJ_COMPONENT_UNLOAD_NAME "dbj_component_can_unload_now"
-#define DBJ_COMPONENT_FACTORYNAME "dbj_component_factory"
-#define DBJ_COMPONENT_SEMVER_NAME "dbj_component_version"
+#define DBJCS_CAN_UNLOAD_NAME "dbj_component_can_unload_now"
+#define DBJCS_FACTORYNAME "dbj_component_factory"
+#define DBJCS_SEMVER_NAME "dbj_component_version"
 
 /*
 function footprints for these two are always the same

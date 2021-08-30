@@ -27,7 +27,7 @@ static inline void get_version_cb(DBJ_COMPONENT_SEMVER_FP get_version)
 /* ----------------------------------------------------------------------------------------------- */
 static void show_component_info(const char component_dll_name[static 1])
 {
-  DBJCAPI_DLL_CALL(component_dll_name, DBJ_COMPONENT_SEMVER_NAME, DBJ_COMPONENT_SEMVER_FP, get_version_cb);
+  DBJCS_ANY_CALL(component_dll_name, DBJCS_SEMVER_NAME, DBJ_COMPONENT_SEMVER_FP, get_version_cb);
 }
 /* ----------------------------------------------------------------------------------------------- */
 // this is a callback, after its done DLL is unloaded
@@ -71,12 +71,13 @@ int main(int argc, char **argv)
   dbjcapi_memory_info(stderr);
 
   show_component_info(COMPONENT_A_DLL_NAME);
-  DBJCAPI_DLL_CALL(COMPONENT_A_DLL_NAME, DBJ_COMPONENT_FACTORYNAME, component_a_factory_fp, component_a_user);
-  dbjcapi_memory_info(stderr);
+  DBJCS_FACTORY_CALL(COMPONENT_A_DLL_NAME, component_a_factory_fp, component_a_user);
+
   show_component_info(COMPONENT_B_DLL_NAME);
-  DBJCAPI_DLL_CALL(COMPONENT_B_DLL_NAME, DBJ_COMPONENT_FACTORYNAME, component_b_factory_fp, component_b_user);
-  dbjcapi_memory_info(stderr);
+  DBJCS_FACTORY_CALL(COMPONENT_B_DLL_NAME, component_b_factory_fp, component_b_user);
+
   DBJCS_LOADER_LOG("Ending: %s", argv[0]);
+  dbjcapi_memory_info(stderr);
 
   return 0;
 }

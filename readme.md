@@ -74,7 +74,7 @@ typedef struct component_a * (component_a_factory_fp)(void);
 
 `dbj-component-loader.h` contains a macro that does it  all. 
 ```cpp
-#define DBJCAPI_DLL_CALL(
+#define DBJCS_FACTORY_CALL(
 dll_name_, 
 fun_name_, 
 RFP,          // the factory function pointer 
@@ -86,15 +86,15 @@ Synopsis of its core explains succinctly the workings of DBJCS:
 // try and load the dll
 dbjcapi_dll_load(dll_name_);
 // get to the function first
-// cast the result to required function pointer
-RFP function_ = (RFP)dbjcapi_dll_get_function(fun_name_); 
+// cast the result to the required function pointer
+RFP function_ = (RFP)dbjcs_dll_get_function(fun_name_); 
 // if function is found call the callback
 // with it as a argument
 if (function_)            
       callback_(function_);
 // immediately "unload" the dll      
 // Windows keeps it in a memory for a while
-dbjcapi_dll_unload();
+dbjcs_dll_unload();
 ```
 Example: On the struct interface of the `component_a.dll` declared is a function pointer `get42` . The struct interface is declared like this:
 ```cpp
@@ -118,7 +118,7 @@ Let us call that `get42`. We need:
 void use_component_a ( component_a_factory_fp factory_) ;
 
  // execute the load and call
-DBJCAPI_DLL_CALL( 
+DBJCS_FACTORY_CALL( 
   "component_a.dll",
  "dbj_component_factory", 
  component_a_factory_fp,

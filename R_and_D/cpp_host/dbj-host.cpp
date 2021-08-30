@@ -18,7 +18,7 @@ static void show_component_info(const char *const component_dll_name)
   using ::dbj::win::dll_call;
 
   dll_call<DBJ_COMPONENT_SEMVER_FP>(component_dll_name,
-                                    DBJ_COMPONENT_SEMVER_NAME,
+                                    DBJCS_SEMVER_NAME,
                                     // return type can not be void
                                     [&](DBJ_COMPONENT_SEMVER_FP get_version)
                                     {
@@ -40,7 +40,7 @@ int main(int argc, char **argv)
     // here we are just demoing dll_call() returning the type and value as expected from the
     // fumction signature and its function pointer used
     dll_call<component_a_factory_fp>(COMPONENT_A_DLL_NAME,      // load this dll
-                                     DBJ_COMPONENT_FACTORYNAME, // get to this function
+                                     DBJCS_FACTORYNAME, // get to this function
                                                                 // implementation_ is never null as lambda is not called
                                                                 // if something goes wrong
                                                                 // also there is a log file named <app base name>.exe.log
@@ -56,7 +56,7 @@ int main(int argc, char **argv)
     show_component_info(COMPONENT_B_DLL_NAME);
 
     dll_call<component_b_factory_fp>(COMPONENT_B_DLL_NAME,      // load this dll
-                                     DBJ_COMPONENT_FACTORYNAME, // get to this function
+                                     DBJCS_FACTORYNAME, // get to this function
                                                                 // implementation_ is never null as lambda is not called
                                                                 // if something goes wrong
                                                                 // also there is a log file named <app base name>.exe.log

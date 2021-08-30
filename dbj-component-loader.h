@@ -14,12 +14,12 @@ Here is dynamic dll loading and fetching a function from the said dll
 // ----------------------------------------------------------------
 DBJ_EXTERN_C_BEGIN
 
-typedef enum dbjcapi_dll_call_semver
+typedef enum dbjcs_dll_call_semver
 {
 	major = 1,
-	minor = 0,
+	minor = 5,
 	patch = 0
-} dbjcapi_dll_call_semver;
+} dbjcs_dll_call_semver;
 
 DBJ_EXTERN_C_END
 
@@ -59,7 +59,7 @@ static inline dbjcs_loader_state *dbjcs_loader_state_(void)
 	return &instance;
 }
 
-static inline bool dbjcapi_dll_loaded(void)
+static inline bool dbjcs_dll_loaded(void)
 {
 	dbjcs_loader_state *state = dbjcs_loader_state_();
 	// if this is NOT NULL we know DLL by this name is loaded
@@ -67,13 +67,13 @@ static inline bool dbjcapi_dll_loaded(void)
 	return state->dll_handle_ != 0;
 }
 
-static inline int dbjcapi_assign_dll_name(char const name_[static 1])
+static inline int dbjcs_assign_dll_name(char const name_[static 1])
 {
 	dbjcs_loader_state *state = dbjcs_loader_state_();
 
 	// major logic check here
 #ifdef _DEBUG
-	if (dbjcapi_dll_loaded())
+	if (dbjcs_dll_loaded())
 	{
 		if (state->dll_name_[0] != 0)
 			DBG_PRINT("DLL %s, is already loaded", state->dll_name_);
@@ -89,14 +89,14 @@ static inline int dbjcapi_assign_dll_name(char const name_[static 1])
 }
 
 /*
-We manage just a single DLL load --> call -->dbjcapi_dll_unload
+We manage just a single DLL load --> call -->dbjcs_dll_unload
 */
-static inline void dbjcapi_dll_load(
+static inline void dbjcs_dll_load(
 	const char dll_file_name_[static 1])
 {
 	// will do fast fail on logic error
 	// ie if dll is already loaded
-	dbjcapi_assign_dll_name(dll_file_name_);
+	dbjcs_assign_dll_name(dll_file_name_);
 
 	dbjcs_loader_state *state = dbjcs_loader_state_();
 
@@ -114,9 +114,9 @@ FreeLibrary() failure is very rare and might signal
 some deep error with the machines or OS
 thus we will not ignore it.
 */
-static inline void dbjcapi_dll_unload()
+static inline void dbjcs_dll_unload()
 {
-	if (dbjcapi_dll_loaded())
+	if (dbjcs_dll_loaded())
 	{
 		dbjcs_loader_state *state = dbjcs_loader_state_();
 		if (!FreeLibrary(state->dll_handle_))
@@ -132,7 +132,7 @@ static inline void dbjcapi_dll_unload()
 }
 
 // we will use the destructor to free the dll if any is left in memory
-__attribute__((destructor)) static inline void dbjcapi_dll_loader_destructor(void) { dbjcapi_dll_unload(); }
+__attribute__((destructor)) static inline void dbjcs_dll_loader_destructor(void) { dbjcs_dll_unload(); }
 
 /*
 RFP = Required Function FP of the function fromm the DLL
@@ -141,10 +141,10 @@ bellow returns null or function pointer to the one requested
 void * "saves the day here" thus the function is generic
 the user knows the RFP and will cast to it
 */
-static inline void *dbjcapi_dll_get_function(char const fun_name_[static 1])
+static inline void *dbjcs_dll_get_function(char const fun_name_[static 1])
 {
 	dbjcs_loader_state *state = dbjcs_loader_state_();
-	if (!dbjcapi_dll_loaded())
+	if (!dbjcs_dll_loaded())
 	{
 		DBJ_FAST_FAIL;
 		return 0;
@@ -167,25 +167,42 @@ static inline void *dbjcapi_dll_get_function(char const fun_name_[static 1])
 }
 
 #endif // DBJCS_DLL_CALLER_IMPLEMENTATION
+
+#ifndef DBJCS_FACTORYNAME
+#define DBJCS_FACTORYNAME "dbj_component_factory"
+#endif // ! DBJCS_FACTORYNAME
 /*
 RFP = Required Function FP of the function fromm the DLL
 
 The do it all function,
-call the callback provided with the 
-pointer of the fetched function.
+get the factory function and cast its result to RFP
+RFP = Actual Factory Function Pointer for the actual components
+Call Back Function signature is: void ( * callback ) ( RFP )
+
 if dll load has failed the callback 
 will not be called.
-RFP = Actual Function Type
-Call Back Function signature is: void ( * callback ) ( RFP )
 */
-#define DBJCAPI_DLL_CALL(dll_name_, fun_name_, RFP, callback_)    \
-	do                                                            \
-	{                                                             \
-		dbjcapi_dll_load(dll_name_);                              \
-		RFP function_ = (RFP)dbjcapi_dll_get_function(fun_name_); \
-		if (function_)                                            \
-			callback_(function_);                                 \
-		dbjcapi_dll_unload();                                     \
+#define DBJCS_FACTORY_CALL(dll_name_, RFP, callback_)                   \
+	do                                                                  \
+	{                                                                   \
+		dbjcs_dll_load(dll_name_);                                      \
+		RFP function_ = (RFP)dbjcs_dll_get_function(DBJCS_FACTORYNAME); \
+		if (function_)                                                  \
+			callback_(function_);                                       \
+		dbjcs_dll_unload();                                             \
+	} while (0)
+
+/*
+call any function from the DLL whose full signature you know
+*/
+#define DBJCS_ANY_CALL(dll_name_, function_name, RFP, callback_) \
+	do                                                           \
+	{                                                            \
+		dbjcs_dll_load(dll_name_);                               \
+		RFP function_ = (RFP)(function_name);                    \
+		if (function_)                                           \
+			callback_(function_);                                \
+		dbjcs_dll_unload();                                      \
 	} while (0)
 
 // ----------------------------------------------------------------------------

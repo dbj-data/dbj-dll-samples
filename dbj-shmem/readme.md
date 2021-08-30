@@ -70,14 +70,14 @@ Using the DBJ Component loader that callback is used typically like so:
 ```cpp
 int main(int argc, char **argv)
 {
-  DBJCAPI_DLL_CALL(
+  DBJCS_FACTORY_CALL(
       /* dll file name */
       "dbj-shmem.dll", 
       /* 
       method name, always: 'dbj_component_factory' 
       defined in dbj-component.h
       */
-      DBJ_COMPONENT_FACTORYNAME, 
+      DBJCS_FACTORYNAME, 
       /* defined in the header of this dll */
       component_factory_fp, 
       component_user /* callback above */
