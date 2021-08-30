@@ -1,10 +1,10 @@
 # Shared Memory in a DBJ Component
 
-Basically wit this tool you can create inter process, named memory blocks. Inter process means, block are shared between processes if the all use this same DLL and are holding it in their memory in the same time.
+Basically wit this tool you can create inter process, named memory blocks. Inter process means, block are shared between processes if all use this same DLL and are holding it in their memory in the same time.
 
 When last process release this component (dll) the shared memory is lost. Thus, this is not a persistent storage.
 
-Shared Memory names is often abbreviated into: ***shmem***.
+Shared Memory term is often abbreviated into: ***shmem***.
 
 In WIN32, shmem is actually implemented as a (kind-of-a) file which is shared. It is much easier to understand if you think of it in that way. A shared file, that disappears after last user has released it.
 

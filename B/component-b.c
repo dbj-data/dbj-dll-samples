@@ -2,12 +2,12 @@
 #include "../dbj-component.h"
 #include "../dbj-string.h"
 //
-#include <string.h>
-#include <intrin.h>
+// #include <string.h>
+// #include <intrin.h>
 
 #include "shmemory.h"
 
-DBJ_COMPONENT_VERSION_IMPLEMENTATION(0, 2, 0, "dbj component B");
+DBJ_COMPONENT_VERSION_IMPLEMENTATION(0, 2, 0, "dbj shmem component");
 /* --------------------------------------------------------------------------------- */
 // dbj_component_can_unload_now() is part of dbj-component definition
 // it is also generated here

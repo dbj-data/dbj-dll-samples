@@ -41,10 +41,14 @@ static inline void component_b_user(component_b_factory_fp factory)
   int fty2 = 42;
   DBJ_VERIFY(implementation->set_value(implementation, key, sizeof(int), &fty2));
   int retrieved = 0;
-  int * ptr = & retrieved ;
+  int *ptr = &retrieved;
   DBJ_VERIFY(implementation->get_value(implementation, key, sizeof(int), (void **)&ptr));
-  DBJ_VERIFY(*ptr == 42 );
+  // code is ok clang is wrong ;) ... so
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wtautological-constant-out-of-range-compare"
+  DBJ_VERIFY(*ptr == 42);
   DBJ_VERIFY(implementation->delete (implementation, key));
+#pragma clang diagnostic pop
 }
 /* ----------------------------------------------------------------------------------------------- */
 // this is a callback, after its done DLL is unloaded

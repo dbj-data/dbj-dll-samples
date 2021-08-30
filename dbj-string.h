@@ -15,9 +15,19 @@ one dbj component == one dll == one component interface == one struct
 
    obviously wchar_t variant can and will be added as soon as it is required
 */
-
-#include <dbj_capi/ccommon.h>
+// #define __STDC_WANT_LIB_EXT1__
 #include <string.h>
+
+#ifdef __cplusplus                
+#define		DBJ_EXTERN_C_BEGIN extern "C" {
+#define		DBJ_EXTERN_C_END  }
+#else // ! __cplusplus
+#define		DBJ_EXTERN_C_BEGIN
+#define		DBJ_EXTERN_C_END
+#endif // !__cplusplus
+
+#undef DBJ_COUNT_OF
+#define DBJ_COUNT_OF(x) ((sizeof(x)/sizeof(0[x])) / ((size_t)(!(sizeof(x) % sizeof(0[x])))))
 
 DBJ_EXTERN_C_BEGIN
 
@@ -42,7 +52,8 @@ typedef DBJ_STRING_TYPE(  16) dbj_string_16 ;
 
 #define DBJ_STRING_SIZE(STR_) DBJ_COUNT_OF(STR_.data)
 
-#ifdef __STDC_LIB_EXT1__
+#ifdef _MSC_VER
+// #ifdef __STDC_LIB_EXT1__
 #define DBJ_STRING_ASSIGN(STR_, S_)                          \
     do                                                                 \
     {                                                                  \

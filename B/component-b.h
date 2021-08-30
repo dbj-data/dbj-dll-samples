@@ -2,6 +2,7 @@
 #define COMPONENT_B_INC_
 
 #include "../dbj-string.h"
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
