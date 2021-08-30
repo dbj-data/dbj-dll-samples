@@ -1,7 +1,7 @@
 #include "component-a.h"
 
 #include "../dbj-component.h"
-#include "../dbj-component-string.h"
+#include "../dbj-string.h"
 
 #include <intrin.h>
 
@@ -9,20 +9,20 @@
 DBJ_COMPONENT_VERSION_IMPLEMENTATION(0,1,0,"dbj component A");
 /* --------------------------------------------------------------------------------- */
 // dbj_component_can_unload_now() is part of dbj-component definition
-// it is also generted here
+// it is also generated here
 DBJ_COMPONENT_UNLOADER_IMPLEMENTATION ;
 /* --------------------------------------------------------------------------------- */
 // connection_string_ is connection_string functionimplementation
 // kept private to the component
-static dbj_component_string_1024 connection_string_(
+static dbj_string_1024 connection_string_(
     struct component_a *self_ )
 {
-    dbj_component_string_1024 retval = {{0}};
+    dbj_string_1024 retval = {{0}};
 
     if (!self_)
         return retval ;
 
-    DBJ_COMPONENT_STRING_ASSIGN( retval, "server=localhost;user=root;pasword=qwqwqwqw123;") ;
+    DBJ_STRING_ASSIGN( retval, "server=localhost;user=root;pasword=qwqwqwqw123;") ;
 
     return retval ;
 }

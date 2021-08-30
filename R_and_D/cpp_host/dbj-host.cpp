@@ -1,7 +1,7 @@
 
 #include "../dbj_capi/cdebug.h"
 #include "../dbj-component.h"
-#include "../dbj-component-string.h"
+#include "../dbj-string.h"
 
 // each component has one struct that describes the component interface
 #include "../A/component-a.h"
@@ -64,8 +64,8 @@ int main(int argc, char **argv)
                                                                 // type this lambda might return
                                      [&](component_b_factory_fp factory)
                                      {
-                                       struct component_b *the_component = factory();
-                                       dbj_component_string_1024 connstr_ = the_component->connection_string(the_component);
+                                       struct component_shmem *the_component = factory();
+                                       dbj_string_1024 connstr_ = the_component->connection_string(the_component);
                                        DBG_PRINT("\nconnection string: %s\n", connstr_.data);
                                      });
   }

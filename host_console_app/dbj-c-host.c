@@ -5,7 +5,7 @@
 
 #include <dbj_capi/cdebug.h>
 #include "../dbj-component.h"
-#include "../dbj-component-string.h"
+#include "../dbj-string.h"
 #include "../dbj-component-loader.h"
 
 // each component has one struct that describes the component interface
@@ -33,10 +33,18 @@ static void show_component_info(const char component_dll_name[static 1])
 // this is a callback, after its done DLL is unloaded
 static inline void component_b_user(component_b_factory_fp factory)
 {
-  struct component_b *implementation = factory();
-  dbj_component_string_1024 connstr_ =
-      implementation->connection_string(implementation);
-  DBG_PRINT("\nComponent B\nconnection string: %s\n", connstr_.data);
+  struct component_shmem *implementation = factory();
+  dbj_string_64 key;
+  DBJ_STRING_ASSIGN(key, "key_one");
+
+  DBJ_VERIFY(implementation->create(implementation, key, sizeof(int)));
+  int fty2 = 42;
+  DBJ_VERIFY(implementation->set_value(implementation, key, sizeof(int), &fty2));
+  int retrieved = 0;
+  int * ptr = & retrieved ;
+  DBJ_VERIFY(implementation->get_value(implementation, key, sizeof(int), (void **)&ptr));
+  DBJ_VERIFY(*ptr == 42 );
+  DBJ_VERIFY(implementation->delete (implementation, key));
 }
 /* ----------------------------------------------------------------------------------------------- */
 // this is a callback, after its done DLL is unloaded
@@ -48,7 +56,7 @@ static inline void component_a_user(component_a_factory_fp factory)
   // int get42(component_a *) ;
   int fty2 = implementation->get42(implementation);
   DBG_PRINT("\nComponent A\nfty2 : %d\n", fty2);
-    dbj_component_string_1024 connstr_ =
+  dbj_string_1024 connstr_ =
       implementation->connection_string(implementation);
   DBG_PRINT("\nconnection string: %s\n", connstr_.data);
 }

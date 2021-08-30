@@ -1,6 +1,6 @@
 #ifndef COMPONENT_A_INC_
 #define COMPONENT_A_INC_
-#include "../dbj-component-string.h"
+#include "../dbj-string.h"
 #ifdef __cplusplus
 extern "C"
 {
@@ -20,8 +20,8 @@ extern "C"
         int (*get42)(struct component_a *);
 
         // notice we do not return pointer made inside component space
-        // dbj_component_string_1024 is: struct { char data [1024]}
-        dbj_component_string_1024 (*connection_string)(struct component_a *);
+        // dbj_string_1024 is: struct { char data [1024]}
+        dbj_string_1024 (*connection_string)(struct component_a *);
     };
 
     // each DBJ COMPOENT has the same def file
