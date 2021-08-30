@@ -13,18 +13,23 @@ DBJ_EXTERN_C_BEGIN
 
 struct dbj_shmem_descriptor
 {
+    dbj_string_32 key;
+    unsigned block_size;
     LPVOID pointer_to_shared_memory; // pointer to shared memory
     HANDLE handle_to_file_mapping;   // handle to file mapping
-    dbj_string_32 block_name;
-    unsigned block_size;
 };
 
 static inline struct dbj_shmem_descriptor dbj_shmem_descriptor_new(
     const char new_name[static 1],
     const unsigned new_size)
 {
-    struct dbj_shmem_descriptor rezult = {0, 0, {{0}}, new_size};
-    DBJ_STRING_ASSIGN(rezult.block_name, new_name);
+    struct dbj_shmem_descriptor rezult = {
+        .key = {{0}},
+        .block_size = new_size,
+        .pointer_to_shared_memory = 0,
+        .handle_to_file_mapping = 0 
+    };
+    DBJ_STRING_ASSIGN(rezult.key, new_name);
     return rezult;
 }
 
@@ -34,16 +39,16 @@ static inline errno_t dbj_shmem_create(struct dbj_shmem_descriptor *descriptor_)
 {
     DBJ_ASSERT(descriptor_);
     descriptor_->handle_to_file_mapping = CreateFileMappingA(
-        INVALID_HANDLE_VALUE,          // use paging file
-        NULL,                          // default security attributes
-        PAGE_READWRITE,                // read/write access
-        0,                             // size: high 32-bits
-        descriptor_->block_size,       // size: low 32-bits
-        descriptor_->block_name.data); // name of map object
+        INVALID_HANDLE_VALUE,    // use paging file
+        NULL,                    // default security attributes
+        PAGE_READWRITE,          // read/write access
+        0,                       // size: high 32-bits
+        descriptor_->block_size, // size: low 32-bits
+        descriptor_->key.data);  // name of map object
     if (descriptor_->handle_to_file_mapping == NULL)
         return EINVAL;
 
-    // The first caller to attach initializes memory
+    // is this the first caller 
     BOOL fInit = (GetLastError() != ERROR_ALREADY_EXISTS);
 
     // Get a pointer to the file-mapped shared memory

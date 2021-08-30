@@ -8,9 +8,9 @@
 #include "../dbj-string.h"
 #include "../dbj-component-loader.h"
 
-// each component has one struct that describes the component interface
+// components are partitioned in their own projects
 #include "../A/component-a.h"
-#include "../B/component-b.h"
+#include "../dbj-shmem/dbj-shmem.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -34,7 +34,7 @@ static void show_component_info(const char component_dll_name[static 1])
 static inline void component_b_user(component_b_factory_fp factory)
 {
   struct component_shmem *implementation = factory();
-  dbj_string_64 key;
+  dbj_shmem_key_type key;
   DBJ_STRING_ASSIGN(key, "key_one");
 
   DBJ_VERIFY(implementation->create(implementation, key, sizeof(int)));
@@ -47,8 +47,8 @@ static inline void component_b_user(component_b_factory_fp factory)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wtautological-constant-out-of-range-compare"
   DBJ_VERIFY(*ptr == 42);
-  DBJ_VERIFY(implementation->delete (implementation, key));
 #pragma clang diagnostic pop
+  DBJ_VERIFY(implementation->delete (implementation, key));
 }
 /* ----------------------------------------------------------------------------------------------- */
 // this is a callback, after its done DLL is unloaded

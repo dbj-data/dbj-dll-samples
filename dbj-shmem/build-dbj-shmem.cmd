@@ -4,7 +4,7 @@
 @echo off
 @cls
 setlocal
-set "sourcebasename=component-b"
+set "sourcebasename=dbj-shmem"
 set "sourcefilename=%sourcebasename%"
 set "build=..\Build"
 @md %build% 2>nul
