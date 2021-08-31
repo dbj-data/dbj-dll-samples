@@ -1,4 +1,7 @@
 
+![ ](unsplash/work_in_progres_raw.jpg)
+<center> <b>Caveat Emptor! Work in Progress</b> </center>
+
 ![unsplash](unsplash/manuel.jpg)
 
 > In IT systems in general, the programming language is not of primary importance. Architecture is.
@@ -9,14 +12,12 @@
 >
 > Also please do not (ever) forget the economy of IT systems: how much money will it take to develop it and more importantly how much money will it take to maintain what you did, and for the next 10+ years.
 
-&copy; 2020 Dec. by dbj at dbj dot org
+&copy; 2020 - 2021 by dbj at dbj dot org
 
-![ ](unsplash/work_in_progres_raw.jpg)
-<center> <b>Work in Progress</b> </center>
 
 # DBJ COMPONENT SYSTEM&trade; aka DBJCS
 
-Why are today's OS-es component systems so complex, and difficult to use? Behind this very pompous name is attempt to architect and implement the simplest possible component system.
+Why are today's component systems so complex, and difficult to use? Behind that very pompous name is attempt to architect and implement the simplest possible component system.
 
 > Using only [standard C](http://www.open-std.org/jtc1/sc22/wg14/www/standards.html#9899) and Windows DLL. 
 
