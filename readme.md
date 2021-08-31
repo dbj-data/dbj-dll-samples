@@ -24,9 +24,9 @@ If some "feature" is missing we can always pull the card of simplicity as an exc
 
 ## How is this working?
 
-- one components is one DLL
-- one component has one interface has one implementation
-- All dbj-components (DLLs) have the same def file. 
+- one DBJ Component is one DLL
+- one component has one C struct that represents an interface that has one implementation
+- All DBJ Components (DLLs) have the same def file. 
   - This is it:
 ```
 EXPORTS
@@ -34,20 +34,23 @@ dbj_component_can_unload_now      PRIVATE
 dbj_component_factory             PRIVATE
 dbj_component_version             PRIVATE
 ```
-- each component has to have two string literals
+- thus each DBJ Component exports all of the three functions above
+- each component header has to have one string literal
   1. The component dll file name
 ```cpp
 // component_a.h
 #define COMPONENT_A_DLL_NAME "component_a.dll"
 ```
-  2. The component factory function name
-     1. that  is always that same: `"dbj_component_factory"`
-- that is enough information to runtime load the dll (aka component) and get to the factory function
-  - not execute it yet
-- factory function returns a single pointer to the component interface 
+ - The component factory function name is always the name
+     - `"dbj_component_factory"`
+     - that is the name (as exported) not the full function signature of the factory function
+- that is enough information to runtime load the dll (aka component) and get to the factory function `void *`
+  - that is not enough to execute it yet
+- factory function returns a pointer to the single implementation of the component interface (a C struct)
 ```cpp
 // from component_a.h
 // factory function declaration is not required
+// it is just implied
 // struct component_a * dbj_component_factory(void);
 ``` 
   - that interface is a struct and is the only thing required to de declared in the component header for users to use.
@@ -60,11 +63,9 @@ struct component_a {
     int (*get42)(struct component_a *);
 };
 ```
-For the factory function from a DLL aka "component" to be executed we need a function pointer that matches the  footprint of the factory function. 
+For the factory function from a DLL aka "component" to be executed we need a function pointer that matches the  footprint of the factory function. Thus we do not need the factory function declaration.
 
-Factory function does not have to be declared. It is defined by name in the `.def` file of the component and its full foot print is only implied.
-
-But we need it function pointer so that we can use it when we load the component dll.
+Again. Factory function does not have to be declared. It is defined by name in the `.def` file of the component and its full foot print is only implied. Allwe need is the factory function pointer so that we can use it after we load the component dll.
 ```cpp
 // component_a.h
 // factory function pointer declaration is required
@@ -72,7 +73,7 @@ typedef struct component_a * (component_a_factory_fp)(void);
 ```
 ### Let us clarify. 
 
-`dbj-component-loader.h` contains a macro that does it  all. 
+`dbj-component-loader.h` contains a macro that does it  all.  It allows user of dbj componet to code a callback that will receive a factory function pointer.
 ```cpp
 #define DBJCS_FACTORY_CALL(
 dll_name_, 
@@ -98,26 +99,26 @@ dbjcs_dll_unload();
 ```
 Example: On the struct interface of the `component_a.dll` declared is a function pointer `get42` . The struct interface is declared like this:
 ```cpp
+// component_a.h
 struct component_a
 {
     int data_;
     int (*get42)(struct component_a *);
 };
 ```
-Let us call that `get42`. We need:
+Let us call that `get42` :
 
 - dll name
   - `"component_a.dll"`
 - factory function name; always the same
   - `"dbj_component_factory"`
 - factory function pointer of the exact component
-  - different for each component
   - `component_a_factory_fp` declared in `"component_a.h"`
+  - the callback where user will do the job
 ```cpp
-// the callback where we will do the job
 void use_component_a ( component_a_factory_fp factory_) ;
 
- // execute the load and call
+ // execute the load and call the callback
 DBJCS_FACTORY_CALL( 
   "component_a.dll",
  "dbj_component_factory", 
