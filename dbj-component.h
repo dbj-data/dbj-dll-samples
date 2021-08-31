@@ -40,32 +40,83 @@ DBJ_EXTERN_C_BEGIN
 dbj-component working or not in the presence of MT is left to the requirements, ie. it is not
 controlled by dbj-component design
 
-The following actually might be NOT slower than using some global CRITICAL_SECTION
+This is not using some global CRITICAL_SECTION. 
+This is function level locking not process level locking.
+
 Usage : 
 
 void fun ( void)
 {
-    dbj_component_lock(true)  ;
+    dbjcs_function_lock_unlock(true)  ;
     //
     // do something
     //
-    dbj_component_lock(false) ;
+    clean_exit:
+    dbjcs_function_lock_unlock(false) ;
+}
+
+NOTE: do not leave the function without unlocking!
+Always goto clean_exit before leaving.
+
+Or simply use <dbj_capi/macro_begin_end_defer.h>
+
+void fun ( void)
+{
+    beginend( dbjcs_function_lock_unlock(true), dbjcs_function_lock_unlock(false) )
+    {
+    // do something here
+    // unlocking guaranteed
+    }
 }
  */
-#define DBJ_COMPONENT_LOCK_UNLOCK_FUNCTION    \
-    static void dbj_component_lock(bool lock) \
-    {                                         \
-        static CRITICAL_SECTION CS_;          \
-        if (lock)                             \
-        {                                     \
-            InitializeCriticalSection(&CS_);  \
-            EnterCriticalSection(&CS_);       \
-        }                                     \
-        else                                  \
-        {                                     \
-            LeaveCriticalSection(&CS_);       \
-            DeleteCriticalSection(&CS_);      \
-        }                                     \
+#define DBJCS_FUNCTION_LOCK_UNLOCK                    \
+    static void dbjcs_function_lock_unlock(bool lock) \
+    {                                                 \
+        static CRITICAL_SECTION CS_;                  \
+        if (lock)                                     \
+        {                                             \
+            InitializeCriticalSection(&CS_);          \
+            EnterCriticalSection(&CS_);               \
+        }                                             \
+        else                                          \
+        {                                             \
+            LeaveCriticalSection(&CS_);               \
+            DeleteCriticalSection(&CS_);              \
+        }                                             \
+    }
+/*
+declare and define a function for compilation unit level lock/unlock
+using this locking can be done only on the level of one compilation unit 
+aka C or C++ file.
+
+Obviuously stay very aware; if you lock with this "everything everywhere" inside
+the same compilation unit will wait at the "locking gate" before
+unlock happens, hence the long and descriptive name of the function
+Same as above advice is to use dbj_capi begiend macro
+
+void fun ( void)
+{
+    beginend( dbjcs_comp_unit_lock_unlock(true), dbjcs_comp_unit_lock_unlock(false) )
+    {
+    // do something here
+    // unlocking at the compilation unit level is guaranteed
+    }
+}
+*/
+#define DBJCS_COMP_UNIT_LOCK_UNLOCK                                       \
+    static CRITICAL_SECTION DBJCS_COMPILATION_UNIT_CRITSECT_;             \
+    static void dbjcs_comp_unit_lock_unlock(bool lock)                    \
+    {                                                                     \
+        if (lock)                                                         \
+        {                                                                 \
+            InitializeCriticalSection(&DBJCS_COMPILATION_UNIT_CRITSECT_); \
+            EnterCriticalSection(&DBJCS_COMPILATION_UNIT_CRITSECT_);      \
+        }                                                                 \
+        else                                                              \
+        {                                                                 \
+            LeaveCriticalSection(&DBJCS_COMPILATION_UNIT_CRITSECT_);      \
+            DeleteCriticalSection(&DBJCS_COMPILATION_UNIT_CRITSECT_);     \
+        }                                                                 \
     }
 
 #pragma region component semver
@@ -79,20 +130,20 @@ struct dbj_component_version_
     unsigned minor;
     unsigned patch;
     char description[0xFF];
-} ;
+};
 
 // use this macro to implement versioning inside a component
-#define DBJ_COMPONENT_VERSION_IMPLEMENTATION(M, N, P, S_)              \
-    struct dbj_component_version_ dbj_component_version(void)              \
-    {                                                                  \
-        static bool done_ = false;                                     \
-        static struct dbj_component_version_ the_version_ = {M, N, P, {0}};      \
-        if (!done_)                                                    \
-        {                                                              \
-            strncpy_s(the_version_.description, 0xFF, S_, strlen(S_)); \
-            done_ = true;                                              \
-        }                                                              \
-        return the_version_;                                           \
+#define DBJ_COMPONENT_VERSION_IMPLEMENTATION(M, N, P, S_)                   \
+    struct dbj_component_version_ dbj_component_version(void)               \
+    {                                                                       \
+        static bool done_ = false;                                          \
+        static struct dbj_component_version_ the_version_ = {M, N, P, {0}}; \
+        if (!done_)                                                         \
+        {                                                                   \
+            strncpy_s(the_version_.description, 0xFF, S_, strlen(S_));      \
+            done_ = true;                                                   \
+        }                                                                   \
+        return the_version_;                                                \
     }
 
 #pragma endregion // component semver

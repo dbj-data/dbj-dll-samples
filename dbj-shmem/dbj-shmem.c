@@ -125,7 +125,7 @@ static bool get_value_method(struct component_shmem *self_, dbj_shmem_key_type k
     return true;
 }
 ///////////////////////////////////////////////////////////////////////////////////
-// private instance of the interface is the component implementation
+// the component implementation
 static struct component_shmem
     componenet_implementation_ =
         {

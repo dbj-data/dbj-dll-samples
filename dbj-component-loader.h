@@ -7,6 +7,25 @@ DBJCS == DBJ Component System
 Here is dynamic dll loading and fetching a function from the said dll
 
 #define DBJCS_DLL_CALLER_IMPLEMENTATION  in exactly one place 
+
+**Caveat emptor**
+
+This loader is single DLL loader. 
+It works in 4 sequential states.
+Single DLL can be used by a single user at one time.
+
+state name  |  loader step
+------------+--------------
+LOADED 		1. load the dll
+FUNCTIONS	2. get the function(s) from it
+USERS		3. use the function(s) from the callback
+UNLOADED 	4. unload the dll
+
+Please be sure not to abuse these steps. For dynamic usage use only this loader.
+Of course you are free to link in the components at build time and use them.
+Although be aware that is a monolithic application, 
+without better partitioning dynamic components are giving.
+
 */
 
 #include <dbj_capi/ccommon.h>
@@ -89,7 +108,9 @@ static inline int dbjcs_assign_dll_name(char const name_[static 1])
 }
 
 /*
-We manage just a single DLL load --> call -->dbjcs_dll_unload
+We manage just a single DLL load 
+
+DLL load --> call -->dbjcs_dll_unload
 */
 static inline void dbjcs_dll_load(
 	const char dll_file_name_[static 1])
