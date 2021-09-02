@@ -34,6 +34,18 @@
 - academic interest: https://preshing.com/20120226/roll-your-own-lightweight-mutex/
 
 ## Brave new components
-- Open source C library for drawing vector graphics? In a DBJCS Component? Why not?
+1. Open source C library for drawing vector graphics? In a DBJCS Component? Why not?
   - https://preshing.com/20170529/heres-a-standalone-cairo-dll-for-windows/
--  Key Value Storage using SQLite
+1.  Key Value Storage using SQLite
+
+## DBJ SHMEM
+
+- DBJ SHMEM is transient key value storage
+  - there is was a system wide COM+ component doing exactly this?! ([or even more](https://docs.microsoft.com/en-us/office/vba/language/reference/user-interface-help/dictionary-object)?)
+- Architecturally might be critical if we keep the restrictive component loader. 
+  - In that scenario there are many components single using other components, single using other components, ad infinitum.
+  - They all talking to each other using SHMEM
+  - Risky or Simple?
+- That one SHMEM might be a point of contention like Registry is today
+  - Not that much because it is transient, not  persistent
+- Implementation to be tested. Properly.
