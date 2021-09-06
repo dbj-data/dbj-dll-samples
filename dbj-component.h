@@ -13,6 +13,7 @@ dbj_component_version           PRIVATE
 */
 #include <dbj_capi/ccommon.h>
 #include <dbj_capi/dbj_windows_include.h>
+#include <intrin.h>
 
 DBJ_EXTERN_C_BEGIN
 

@@ -216,14 +216,14 @@ will not be called.
 /*
 call any function from the DLL whose full signature you know
 */
-#define DBJCS_ANY_CALL(dll_name_, function_name, RFP, callback_) \
-	do                                                           \
-	{                                                            \
-		dbjcs_dll_load(dll_name_);                               \
-		RFP function_ = (RFP)(function_name);                    \
-		if (function_)                                           \
-			callback_(function_);                                \
-		dbjcs_dll_unload();                                      \
+#define DBJCS_ANY_CALL(dll_name_, function_name, RFP, callback_)    \
+	do                                                              \
+	{                                                               \
+		dbjcs_dll_load(dll_name_);                                  \
+		RFP function_ = (RFP)dbjcs_dll_get_function(function_name); \
+		if (function_)                                              \
+			callback_(function_);                                   \
+		dbjcs_dll_unload();                                         \
 	} while (0)
 
 // ----------------------------------------------------------------------------

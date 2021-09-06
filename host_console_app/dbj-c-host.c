@@ -11,6 +11,7 @@
 // components are partitioned in their own projects
 #include "../A/component-a.h"
 #include "../dbj-shmem/dbj-shmem.h"
+#include "../dbj-vector/dbj-vector.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -31,7 +32,7 @@ static void show_component_info(const char component_dll_name[static 1])
 }
 /* ----------------------------------------------------------------------------------------------- */
 // this is a callback, after its done DLL is unloaded
-static inline void component_b_user(component_b_factory_fp factory)
+static inline void shmem_component_user(component_b_factory_fp factory)
 {
   struct component_shmem *implementation = factory();
   dbj_shmem_key_type key;
@@ -65,16 +66,43 @@ static inline void component_a_user(component_a_factory_fp factory)
   DBG_PRINT("\nconnection string: %s\n", connstr_.data);
 }
 /* ----------------------------------------------------------------------------------------------- */
+// vector of equaly sized items
+// this is a callback, after its done DLL is unloaded
+static inline void dbj_vector_component_user(dbj_vector_component_fp factory)
+{
+   struct dbj_vector_component *imp = factory();
+
+// item_size, not vector size is the first argument 
+   dbj_vector_t * vec = imp->create( _countof("A") ,2); 
+   DBJ_VERIFY( imp->size(vec) == 0) ; // nothing has been pushed yet
+   DBJ_VERIFY( imp->capacity(vec) == 2) ;
+// nothing is stopping you to push whatever you want, there are no checks on its size
+   DBJ_VERIFY( DBJ_VCTR_IS_SUCCESS ( imp->push( vec, "A") ) );
+   DBJ_VERIFY( DBJ_VCTR_IS_SUCCESS ( imp->push( vec, "B") ) );
+   DBJ_VERIFY( DBJ_VCTR_IS_SUCCESS ( imp->push( vec, "C") ) );
+   DBJ_VERIFY( imp->size(vec) == 3) ; 
+   
+   DBJ_VERIFY( ! strcmp("A", imp->at( vec, 0)) );
+   DBJ_VERIFY( ! strcmp("B", imp->at( vec, 1)) );
+   DBJ_VERIFY( ! strcmp("C", imp->at( vec, 2)) );
+
+   imp->clear(vec);
+   
+}
+/* ----------------------------------------------------------------------------------------------- */
 int main(int argc, char **argv)
 {
   DBJCS_LOADER_LOG("Starting: %s", argv[0]);
   dbjcapi_memory_info(stderr);
 
+  show_component_info(COMPONENT_FILENAME_DBJ_VECTOR);
+DBJCS_FACTORY_CALL(COMPONENT_FILENAME_DBJ_VECTOR, dbj_vector_component_fp, dbj_vector_component_user);
+
   show_component_info(COMPONENT_A_DLL_NAME);
   DBJCS_FACTORY_CALL(COMPONENT_A_DLL_NAME, component_a_factory_fp, component_a_user);
 
   show_component_info(COMPONENT_B_DLL_NAME);
-  DBJCS_FACTORY_CALL(COMPONENT_B_DLL_NAME, component_b_factory_fp, component_b_user);
+  DBJCS_FACTORY_CALL(COMPONENT_B_DLL_NAME, component_b_factory_fp, shmem_component_user);
 
   DBJCS_LOADER_LOG("Ending: %s", argv[0]);
   dbjcapi_memory_info(stderr);

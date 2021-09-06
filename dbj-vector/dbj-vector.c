@@ -1,7 +1,7 @@
 
 #include "dbj-vector.h"
 #include "../dbj-component.h"
-// #include <intrin.h>
+
 #include "vector.h"
 
 /* --------------------------------------------------------------------------------- */

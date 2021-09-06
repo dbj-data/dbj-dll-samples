@@ -21,7 +21,7 @@ extern "C" {
 #define DBJ_VCTR_IS_ERROR(arg) ((arg) < 0)
 
 	//  make sure build creates this dll for this component
-#define COMPONENT_B_DLL_NAME "dbj-vector.dll"
+#define COMPONENT_FILENAME_DBJ_VECTOR "dbj-vector.dll"
 
 	typedef int dbj_status;
 	typedef struct dbj_vector dbj_vector_t;
