@@ -120,12 +120,22 @@ static inline void dbjcs_dll_load(
 	dbjcs_assign_dll_name(dll_file_name_);
 
 	dbjcs_loader_state *state = dbjcs_loader_state_();
+/*
+    instead of:	state->dll_handle_ = LoadLibraryA(state->dll_name_);
 
-	state->dll_handle_ = LoadLibraryA(state->dll_name_);
+	we shall do the compliant solution by refusing to load a library unless it is located precisely 
+	where expected. Thus we reduce the chance of executing attackers planted DLL, 
+	when dynamically loading libraries.
+*/
+	state->dll_handle_ = LoadLibraryExA(
+		state->dll_name_ ,
+		NULL,
+		LOAD_LIBRARY_SEARCH_APPLICATION_DIR |LOAD_LIBRARY_SEARCH_SYSTEM32
+	);
 
 	if (NULL == state->dll_handle_)
 	{
-		DBJCS_LOADER_LOG(" Could not find the DLL by name: %s", state->dll_name_);
+		DBJCS_LOADER_LOG("Looking only in system folders and application folder. Could not find the DLL by name: %s", state->dll_name_);
 		// reset the file name
 		state->dll_name_[0] = '\0';
 	}
