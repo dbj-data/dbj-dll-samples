@@ -18,49 +18,57 @@ one dbj component == one dll == one component interface == one struct
 // #define __STDC_WANT_LIB_EXT1__
 #include <string.h>
 
-#ifdef __cplusplus                
-#define		DBJ_EXTERN_C_BEGIN extern "C" {
-#define		DBJ_EXTERN_C_END  }
+#ifdef __cplusplus
+#define DBJ_EXTERN_C_BEGIN \
+    extern "C"             \
+    {
+#define DBJ_EXTERN_C_END }
 #else // ! __cplusplus
-#define		DBJ_EXTERN_C_BEGIN
-#define		DBJ_EXTERN_C_END
+#define DBJ_EXTERN_C_BEGIN
+#define DBJ_EXTERN_C_END
 #endif // !__cplusplus
-
-#undef DBJ_COUNT_OF
-#define DBJ_COUNT_OF(x) ((sizeof(x)/sizeof(0[x])) / ((size_t)(!(sizeof(x) % sizeof(0[x])))))
 
 DBJ_EXTERN_C_BEGIN
 
+#undef DBJ_COUNT_OF
+#define DBJ_COUNT_OF(x) ((sizeof(x) / sizeof(0 [x])) / ((size_t)(!(sizeof(x) % sizeof(0 [x])))))
+
 #define DBJ_STRING_TYPE(SIZE_) \
-struct dbj_string_##SIZE_ { char data[SIZE_]; } 
+    struct dbj_string_##SIZE_  \
+    {                          \
+        char data[SIZE_];      \
+    }
 
 // type names defined like that can clash and will clash
-// thus we will define few probably most common in here
-typedef DBJ_STRING_TYPE(1024) dbj_string_1024 ;
-typedef DBJ_STRING_TYPE( 512) dbj_string_512 ;
-typedef DBJ_STRING_TYPE( 256) dbj_string_256 ;
-typedef DBJ_STRING_TYPE( 128) dbj_string_128 ;
-typedef DBJ_STRING_TYPE(  64) dbj_string_64 ;
-typedef DBJ_STRING_TYPE(  32) dbj_string_32 ;
-typedef DBJ_STRING_TYPE(  16) dbj_string_16 ;
+// thus we will define few probably most common
+typedef DBJ_STRING_TYPE(1024) dbj_string_1024;
+typedef DBJ_STRING_TYPE(512) dbj_string_512;
+typedef DBJ_STRING_TYPE(256) dbj_string_256;
+typedef DBJ_STRING_TYPE(128) dbj_string_128;
+typedef DBJ_STRING_TYPE(64) dbj_string_64;
+typedef DBJ_STRING_TYPE(32) dbj_string_32;
+typedef DBJ_STRING_TYPE(16) dbj_string_16;
 
+/*
+anonymous struct used thus no name clashes
+*/
 #define DBJ_STRING(NAME_, SIZE_) \
-    struct                                 \
-    {                                      \
-        char data[SIZE_];                  \
+    struct                       \
+    {                            \
+        char data[SIZE_];        \
     } NAME_ // = {.size = SIZE_} <-- no can do for VLA, ie, if SIZE_ is a runtime value
 
 #define DBJ_STRING_SIZE(STR_) DBJ_COUNT_OF(STR_.data)
 
 #ifdef _MSC_VER
 // #ifdef __STDC_LIB_EXT1__
-#define DBJ_STRING_ASSIGN(STR_, S_)                          \
+#define DBJ_STRING_ASSIGN(STR_, S_)                                    \
     do                                                                 \
     {                                                                  \
         strncpy_s(STR_.data, DBJ_COUNT_OF(STR_.data), S_, strlen(S_)); \
     } while (0)
 #else
-#define DBJ_STRING_ASSIGN(STR_, S_)            \
+#define DBJ_STRING_ASSIGN(STR_, S_)                      \
     do                                                   \
     {                                                    \
         strncpy(STR_.data, S_, DBJ_COUNT_OF(STR_.data)); \
@@ -73,9 +81,9 @@ typedef DBJ_STRING_TYPE(  16) dbj_string_16 ;
 // but in e.g. databases it is a norm; field is always there but can be empty
 // we declare empty dbj component string the one that has '\0' as the first char
 
-#define DBJ_STRING_SET_EMPTY(STR_) ( STR_.data[0] = '\0' )
+#define DBJ_STRING_SET_EMPTY(STR_) (STR_.data[0] = '\0')
 
-#define DBJ_STRING_IS_EMPTY(STR_) ( STR_.data[0] == '\0' )
+#define DBJ_STRING_IS_EMPTY(STR_) (STR_.data[0] == '\0')
 
 DBJ_EXTERN_C_END
 

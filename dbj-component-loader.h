@@ -28,7 +28,8 @@ without better partitioning dynamic components are giving.
 
 */
 
-#include <dbj_capi/ccommon.h>
+// #include <dbj_capi/ccommon.h>
+#include <dbj_capi/dbj_lock_unlock.h>
 
 // ----------------------------------------------------------------
 DBJ_EXTERN_C_BEGIN
@@ -56,8 +57,8 @@ DBJ_EXTERN_C_BEGIN
 /// --------------------------------------------------------------
 /// user can provide the actual log function
 /// the required signature is
-///
 /// extern "C" void (*user_log_FP) (const char* file, long line, const char* , ...);
+/// otherwise we will use dbj_capi
 #ifndef DBJCS_LOADER_LOG
 #define DBJCS_LOADER_LOG(...) dbjcapi_default_log_function(__FILE__, __LINE__, __VA_ARGS__)
 #endif // DBJCS_LOADER_LOG
@@ -65,9 +66,10 @@ DBJ_EXTERN_C_BEGIN
 #undef DBJCS_LOADER_BUF_LEN
 #define DBJCS_LOADER_BUF_LEN 1024
 
+// one per one dll
 typedef struct dbjcs_loader_state
 {
-	// critical section will be in here
+	// critical section might be in here
 	HINSTANCE dll_handle_;
 	char dll_name_[DBJCS_LOADER_BUF_LEN];
 } dbjcs_loader_state;
@@ -120,7 +122,7 @@ static inline void dbjcs_dll_load(
 	dbjcs_assign_dll_name(dll_file_name_);
 
 	dbjcs_loader_state *state = dbjcs_loader_state_();
-/*
+	/*
     instead of:	state->dll_handle_ = LoadLibraryA(state->dll_name_);
 
 	we shall do the compliant solution by refusing to load a library unless it is located precisely 
@@ -128,10 +130,9 @@ static inline void dbjcs_dll_load(
 	when dynamically loading libraries.
 */
 	state->dll_handle_ = LoadLibraryExA(
-		state->dll_name_ ,
+		state->dll_name_,
 		NULL,
-		LOAD_LIBRARY_SEARCH_APPLICATION_DIR |LOAD_LIBRARY_SEARCH_SYSTEM32
-	);
+		LOAD_LIBRARY_SEARCH_APPLICATION_DIR | LOAD_LIBRARY_SEARCH_SYSTEM32);
 
 	if (NULL == state->dll_handle_)
 	{
@@ -210,17 +211,20 @@ get the factory function and cast its result to RFP
 RFP = Actual Factory Function Pointer for the actual components
 Call Back Function signature is: void ( * callback ) ( RFP )
 
-if dll load has failed the callback 
-will not be called.
+if dll load has failed the callback will not be called.
+
+NOTE: LOCKING IS ALWAY ON IN BOTH
 */
 #define DBJCS_FACTORY_CALL(dll_name_, RFP, callback_)                   \
 	do                                                                  \
 	{                                                                   \
+		dbjcapi_function_lock_unlock();                                 \
 		dbjcs_dll_load(dll_name_);                                      \
 		RFP function_ = (RFP)dbjcs_dll_get_function(DBJCS_FACTORYNAME); \
 		if (function_)                                                  \
 			callback_(function_);                                       \
 		dbjcs_dll_unload();                                             \
+		dbjcapi_function_lock_unlock();                                 \
 	} while (0)
 
 /*
@@ -229,11 +233,13 @@ call any function from the DLL whose full signature you know
 #define DBJCS_ANY_CALL(dll_name_, function_name, RFP, callback_)    \
 	do                                                              \
 	{                                                               \
+		dbjcapi_function_lock_unlock();                             \
 		dbjcs_dll_load(dll_name_);                                  \
 		RFP function_ = (RFP)dbjcs_dll_get_function(function_name); \
 		if (function_)                                              \
 			callback_(function_);                                   \
 		dbjcs_dll_unload();                                         \
+		dbjcapi_function_lock_unlock();                             \
 	} while (0)
 
 // ----------------------------------------------------------------------------

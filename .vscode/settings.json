@@ -9,7 +9,6 @@
         "default_log.h": "c",
         "cdebug.h": "c",
         "ccommon.h": "c"
-    }
-
-
+    },
+    "editor.formatOnSave": true
 }

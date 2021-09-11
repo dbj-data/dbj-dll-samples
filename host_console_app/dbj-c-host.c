@@ -45,10 +45,10 @@ static inline void shmem_component_user(component_b_factory_fp factory)
   int *ptr = &retrieved;
   DBJ_VERIFY(implementation->get_value(implementation, key, sizeof(int), (void **)&ptr));
   // code is ok clang is wrong ;) ... so
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wtautological-constant-out-of-range-compare"
+// #pragma clang diagnostic push
+// #pragma clang diagnostic ignored "-Wtautological-constant-out-of-range-compare"
   DBJ_VERIFY(*ptr == 42);
-#pragma clang diagnostic pop
+// #pragma clang diagnostic pop
   DBJ_VERIFY(implementation->delete (implementation, key));
 }
 /* ----------------------------------------------------------------------------------------------- */

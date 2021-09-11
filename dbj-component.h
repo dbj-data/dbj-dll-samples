@@ -15,6 +15,9 @@ dbj_component_version           PRIVATE
 #include <dbj_capi/dbj_windows_include.h>
 #include <intrin.h>
 
+// dbj-component working or not in the presence of MT is left to the requirements, ie. it is not
+// controlled by dbj-component design
+
 DBJ_EXTERN_C_BEGIN
 
 // dbj_component_can_unload_now is part of each dbj-component definition
@@ -35,89 +38,6 @@ DBJ_EXTERN_C_BEGIN
     bool dbj_component_can_unload_now(void)                       \
     {                                                             \
         return component_counter_ == 0;                           \
-    }
-
-/*
-dbj-component working or not in the presence of MT is left to the requirements, ie. it is not
-controlled by dbj-component design
-
-This is not using some global CRITICAL_SECTION. 
-This is function level locking not process level locking.
-
-Usage : 
-
-void fun ( void)
-{
-    dbjcs_function_lock_unlock(true)  ;
-    //
-    // do something
-    //
-    clean_exit:
-    dbjcs_function_lock_unlock(false) ;
-}
-
-NOTE: do not leave the function without unlocking!
-Always goto clean_exit before leaving.
-
-Or simply use <dbj_capi/macro_begin_end_defer.h>
-
-void fun ( void)
-{
-    beginend( dbjcs_function_lock_unlock(true), dbjcs_function_lock_unlock(false) )
-    {
-    // do something here
-    // unlocking guaranteed
-    }
-}
- */
-#define DBJCS_FUNCTION_LOCK_UNLOCK                    \
-    static void dbjcs_function_lock_unlock(bool lock) \
-    {                                                 \
-        static CRITICAL_SECTION CS_;                  \
-        if (lock)                                     \
-        {                                             \
-            InitializeCriticalSection(&CS_);          \
-            EnterCriticalSection(&CS_);               \
-        }                                             \
-        else                                          \
-        {                                             \
-            LeaveCriticalSection(&CS_);               \
-            DeleteCriticalSection(&CS_);              \
-        }                                             \
-    }
-/*
-declare and define a function for compilation unit level lock/unlock
-using this locking can be done only on the level of one compilation unit 
-aka C or C++ file.
-
-Obviuously stay very aware; if you lock with this "everything everywhere" inside
-the same compilation unit will wait at the "locking gate" before
-unlock happens, hence the long and descriptive name of the function
-Same as above advice is to use dbj_capi begiend macro
-
-void fun ( void)
-{
-    beginend( dbjcs_comp_unit_lock_unlock(true), dbjcs_comp_unit_lock_unlock(false) )
-    {
-    // do something here
-    // unlocking at the compilation unit level is guaranteed
-    }
-}
-*/
-#define DBJCS_COMP_UNIT_LOCK_UNLOCK                                       \
-    static CRITICAL_SECTION DBJCS_COMPILATION_UNIT_CRITSECT_;             \
-    static void dbjcs_comp_unit_lock_unlock(bool lock)                    \
-    {                                                                     \
-        if (lock)                                                         \
-        {                                                                 \
-            InitializeCriticalSection(&DBJCS_COMPILATION_UNIT_CRITSECT_); \
-            EnterCriticalSection(&DBJCS_COMPILATION_UNIT_CRITSECT_);      \
-        }                                                                 \
-        else                                                              \
-        {                                                                 \
-            LeaveCriticalSection(&DBJCS_COMPILATION_UNIT_CRITSECT_);      \
-            DeleteCriticalSection(&DBJCS_COMPILATION_UNIT_CRITSECT_);     \
-        }                                                                 \
     }
 
 #pragma region component semver
