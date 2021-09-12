@@ -27,7 +27,7 @@ extern "C"
     //
     // FP of the dbj_component_factory
     // for this component
-    typedef struct component_shmem *(*component_b_factory_fp)(void);
+    typedef struct component_shmem *(*component_shmem_factory_fp)(void);
 
 #ifdef __cplusplus
 } // extern "C"

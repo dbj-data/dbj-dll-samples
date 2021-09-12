@@ -55,14 +55,14 @@ int main(int argc, char **argv)
   {
     show_component_info(DBJ_SHMEM_DLL_NAME);
 
-    dll_call<component_b_factory_fp>(DBJ_SHMEM_DLL_NAME, // load this dll
+    dll_call<component_shmem_factory_fp>(DBJ_SHMEM_DLL_NAME, // load this dll
                                      DBJCS_FACTORYNAME,  // get to this function
                                                          // implementation_ is never null as lambda is not called
                                                          // if something goes wrong
                                                          // also there is a log file named <app base name>.exe.log
                                                          // and the dll_call returns the default value of whatever
                                                          // type this lambda might return
-                                     [&](component_b_factory_fp factory)
+                                     [&](component_shmem_factory_fp factory)
                                      {
                                        struct component_shmem *the_component = factory();
                                        dbj_string_1024 connstr_ = the_component->connection_string(the_component);

@@ -40,7 +40,7 @@ It is obvious all methods return false on any error. The error is in the good ol
 Here is the typical callback using this dbj component. This is a callback, after its done component is unloaded.
 
 ```cpp
-static inline void component_b_user(component_b_factory_fp factory)
+static inline void component_b_user(component_shmem_factory_fp factory)
 {
     // single pointer to the struct component interface
   struct component_shmem *implementation = factory();

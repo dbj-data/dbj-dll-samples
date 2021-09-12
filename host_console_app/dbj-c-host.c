@@ -32,7 +32,7 @@ static void show_component_info(const char component_dll_name[static 1])
 }
 /* ----------------------------------------------------------------------------------------------- */
 // this is a callback, after its done DLL is unloaded
-static inline void shmem_component_user(component_b_factory_fp factory)
+static inline void shmem_component_user(component_shmem_factory_fp factory)
 {
   struct component_shmem *implementation = factory();
   dbj_shmem_key_type key;
@@ -101,7 +101,7 @@ int main(int argc, char **argv)
   DBJCS_FACTORY_CALL(COMPONENT_A_DLL_NAME, component_a_factory_fp, component_a_user);
 
   show_component_info(DBJ_SHMEM_DLL_NAME);
-  DBJCS_FACTORY_CALL(DBJ_SHMEM_DLL_NAME, component_b_factory_fp, shmem_component_user);
+  DBJCS_FACTORY_CALL(DBJ_SHMEM_DLL_NAME, component_shmem_factory_fp, shmem_component_user);
 
   DBJCS_LOADER_LOG("Ending: %s", argv[0]);
   dbjcapi_memory_info(stderr);
