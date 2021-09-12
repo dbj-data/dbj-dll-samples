@@ -1,19 +1,22 @@
 #ifndef DBJ_STRING_INCLUDED
 #define DBJ_STRING_INCLUDED
 /*
-one dbj component == one dll == one component interface == one struct
+   dbj capi string is an char array in a struct, for example
 
-   do not return pointers to the component internals, component can be unloaded any time
-   dbj component string is an char array in a struct, for example
+   struct { char data[0xFF]; } str1 = {""};
 
-   struct { char data[0xFF]; } str1 ;
+   if size is runtime value the resulting instance can not be initialized
 
-   if size is runtime value that is VLA and the resulting instance can not be initialized
+   int j = 0xFF ;
+   struct { char data[j]; } str1 = {""}; // does not compile
+   struct { char data[j]; } str1 ; // does compile
+
    this is static thus free-ing is not required
    this can be sent into and out of functions and dbj components, 
    C runtime will do very fast copy elision in any case
 
    obviously wchar_t variant can and will be added as soon as it is required
+   same is for utf-8, utf-16 and utf-32
 */
 // #define __STDC_WANT_LIB_EXT1__
 #include <string.h>
