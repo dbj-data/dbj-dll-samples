@@ -17,6 +17,8 @@
 
    obviously wchar_t variant can and will be added as soon as it is required
    same is for utf-8, utf-16 and utf-32
+
+   Godbolt quick test: https://godbolt.org/z/MG7dhaq43
 */
 // #define __STDC_WANT_LIB_EXT1__
 #include <string.h>
