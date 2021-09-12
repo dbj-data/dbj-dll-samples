@@ -100,8 +100,8 @@ int main(int argc, char **argv)
   show_component_info(COMPONENT_A_DLL_NAME);
   DBJCS_FACTORY_CALL(COMPONENT_A_DLL_NAME, component_a_factory_fp, component_a_user);
 
-  show_component_info(COMPONENT_B_DLL_NAME);
-  DBJCS_FACTORY_CALL(COMPONENT_B_DLL_NAME, component_b_factory_fp, shmem_component_user);
+  show_component_info(DBJ_SHMEM_DLL_NAME);
+  DBJCS_FACTORY_CALL(DBJ_SHMEM_DLL_NAME, component_b_factory_fp, shmem_component_user);
 
   DBJCS_LOADER_LOG("Ending: %s", argv[0]);
   dbjcapi_memory_info(stderr);

@@ -10,7 +10,7 @@ extern "C"
 #endif // __cplusplus
 
 //  make sure build creates this dll for this component
-#define COMPONENT_B_DLL_NAME "dbj-shmem.dll"
+#define DBJ_SHMEM_DLL_NAME "dbj-shmem.dll"
 
     typedef dbj_string_32 dbj_shmem_key_type;
 
