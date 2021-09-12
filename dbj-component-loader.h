@@ -37,7 +37,7 @@ DBJ_EXTERN_C_BEGIN
 typedef enum dbjcs_dll_call_semver
 {
 	major = 1,
-	minor = 5,
+	minor = 8,
 	patch = 0
 } dbjcs_dll_call_semver;
 
@@ -136,7 +136,8 @@ static inline void dbjcs_dll_load(
 
 	if (NULL == state->dll_handle_)
 	{
-		DBJCS_LOADER_LOG("Looking only in system folders and application folder. Could not find the DLL by name: %s", state->dll_name_);
+		DBJCS_LOADER_LOG("DLL Loaf error: [%d]. Looking only in system folders and application folder. Could not find the DLL by name: %s",
+						 GetLastError(), state->dll_name_);
 		// reset the file name
 		state->dll_name_[0] = '\0';
 	}

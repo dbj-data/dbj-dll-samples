@@ -2,7 +2,7 @@
 @rem 
 @rem
 @echo off
-@cls
+@rem cls
 setlocal
 set "sourcebasename=dbj-vector"
 set "sourcefilename=%sourcebasename%"

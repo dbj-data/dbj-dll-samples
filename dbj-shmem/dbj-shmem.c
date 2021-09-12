@@ -1,6 +1,6 @@
 #include "dbj-shmem.h"
 #include "../dbj-component.h"
-#include "../dbj-string.h"
+#include <dbj_capi/dbj-string.h>
 
 #define STB_DS_IMPLEMENTATION
 #include <stb/stb_ds.h> // hash table

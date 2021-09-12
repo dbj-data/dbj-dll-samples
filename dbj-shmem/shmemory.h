@@ -7,7 +7,7 @@
 
 #include <memory.h>
 
-#include "../dbj-string.h"
+#include <dbj_capi/dbj-string.h>
 
 DBJ_EXTERN_C_BEGIN
 
@@ -27,8 +27,7 @@ static inline struct dbj_shmem_descriptor dbj_shmem_descriptor_new(
         .key = {{0}},
         .block_size = new_size,
         .pointer_to_shared_memory = 0,
-        .handle_to_file_mapping = 0 
-    };
+        .handle_to_file_mapping = 0};
     DBJ_STRING_ASSIGN(rezult.key, new_name);
     return rezult;
 }
@@ -48,7 +47,7 @@ static inline errno_t dbj_shmem_create(struct dbj_shmem_descriptor *descriptor_)
     if (descriptor_->handle_to_file_mapping == NULL)
         return EINVAL;
 
-    // is this the first caller 
+    // is this the first caller
     BOOL fInit = (GetLastError() != ERROR_ALREADY_EXISTS);
 
     // Get a pointer to the file-mapped shared memory

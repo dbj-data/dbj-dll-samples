@@ -1,8 +1,9 @@
 @rem
+@rem inspired by :
 @rem https://docs.microsoft.com/en-us/archive/msdn-magazine/2015/july/windows-with-c-windows-runtime-components
 @rem
 @echo off
-@cls
+@rem cls
 setlocal
 set "sourcebasename=component-a"
 set "sourcefilename=%sourcebasename%"

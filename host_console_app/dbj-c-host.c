@@ -5,7 +5,7 @@
 
 #include <dbj_capi/cdebug.h>
 #include "../dbj-component.h"
-#include "../dbj-string.h"
+#include <dbj_capi/dbj-string.h>
 #include "../dbj-component-loader.h"
 
 // components are partitioned in their own projects
@@ -45,10 +45,10 @@ static inline void shmem_component_user(component_b_factory_fp factory)
   int *ptr = &retrieved;
   DBJ_VERIFY(implementation->get_value(implementation, key, sizeof(int), (void **)&ptr));
   // code is ok clang is wrong ;) ... so
-// #pragma clang diagnostic push
-// #pragma clang diagnostic ignored "-Wtautological-constant-out-of-range-compare"
+  // #pragma clang diagnostic push
+  // #pragma clang diagnostic ignored "-Wtautological-constant-out-of-range-compare"
   DBJ_VERIFY(*ptr == 42);
-// #pragma clang diagnostic pop
+  // #pragma clang diagnostic pop
   DBJ_VERIFY(implementation->delete (implementation, key));
 }
 /* ----------------------------------------------------------------------------------------------- */
@@ -70,24 +70,23 @@ static inline void component_a_user(component_a_factory_fp factory)
 // this is a callback, after its done DLL is unloaded
 static inline void dbj_vector_component_user(dbj_vector_component_fp factory)
 {
-   struct dbj_vector_component *imp = factory();
+  struct dbj_vector_component *imp = factory();
 
-// item_size, not vector size is the first argument 
-   dbj_vector_t * vec = imp->create( _countof("A") ,2); 
-   DBJ_VERIFY( imp->size(vec) == 0) ; // nothing has been pushed yet
-   DBJ_VERIFY( imp->capacity(vec) == 2) ;
-// nothing is stopping you to push whatever you want, there are no checks on its size
-   DBJ_VERIFY( DBJ_VCTR_IS_SUCCESS ( imp->push( vec, "A") ) );
-   DBJ_VERIFY( DBJ_VCTR_IS_SUCCESS ( imp->push( vec, "B") ) );
-   DBJ_VERIFY( DBJ_VCTR_IS_SUCCESS ( imp->push( vec, "C") ) );
-   DBJ_VERIFY( imp->size(vec) == 3) ; 
-   
-   DBJ_VERIFY( ! strcmp("A", imp->at( vec, 0)) );
-   DBJ_VERIFY( ! strcmp("B", imp->at( vec, 1)) );
-   DBJ_VERIFY( ! strcmp("C", imp->at( vec, 2)) );
+  // item_size, not vector size is the first argument
+  dbj_vector_t *vec = imp->create(_countof("A"), 2);
+  DBJ_VERIFY(imp->size(vec) == 0); // nothing has been pushed yet
+  DBJ_VERIFY(imp->capacity(vec) == 2);
+  // nothing is stopping you to push whatever you want, there are no checks on its size
+  DBJ_VERIFY(DBJ_VCTR_IS_SUCCESS(imp->push(vec, "A")));
+  DBJ_VERIFY(DBJ_VCTR_IS_SUCCESS(imp->push(vec, "B")));
+  DBJ_VERIFY(DBJ_VCTR_IS_SUCCESS(imp->push(vec, "C")));
+  DBJ_VERIFY(imp->size(vec) == 3);
 
-   imp->clear(vec);
-   
+  DBJ_VERIFY(!strcmp("A", imp->at(vec, 0)));
+  DBJ_VERIFY(!strcmp("B", imp->at(vec, 1)));
+  DBJ_VERIFY(!strcmp("C", imp->at(vec, 2)));
+
+  imp->clear(vec);
 }
 /* ----------------------------------------------------------------------------------------------- */
 int main(int argc, char **argv)
@@ -96,7 +95,7 @@ int main(int argc, char **argv)
   dbjcapi_memory_info(stderr);
 
   show_component_info(COMPONENT_FILENAME_DBJ_VECTOR);
-DBJCS_FACTORY_CALL(COMPONENT_FILENAME_DBJ_VECTOR, dbj_vector_component_fp, dbj_vector_component_user);
+  DBJCS_FACTORY_CALL(COMPONENT_FILENAME_DBJ_VECTOR, dbj_vector_component_fp, dbj_vector_component_user);
 
   show_component_info(COMPONENT_A_DLL_NAME);
   DBJCS_FACTORY_CALL(COMPONENT_A_DLL_NAME, component_a_factory_fp, component_a_user);

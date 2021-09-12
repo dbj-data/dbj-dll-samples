@@ -1,7 +1,7 @@
 
 #include "../dbj_capi/cdebug.h"
 #include "../dbj-component.h"
-#include "../dbj-string.h"
+#include <dbj_capi/dbj-string.h>
 
 // each component has one struct that describes the component interface
 #include "../A/component-a.h"
@@ -39,13 +39,13 @@ int main(int argc, char **argv)
 
     // here we are just demoing dll_call() returning the type and value as expected from the
     // fumction signature and its function pointer used
-    dll_call<component_a_factory_fp>(COMPONENT_A_DLL_NAME,      // load this dll
-                                     DBJCS_FACTORYNAME, // get to this function
-                                                                // implementation_ is never null as lambda is not called
-                                                                // if something goes wrong
-                                                                // also there is a log file named <app base name>.exe.log
-                                                                // and the dll_call returns the default value of whatever
-                                                                // type this lambda might return
+    dll_call<component_a_factory_fp>(COMPONENT_A_DLL_NAME, // load this dll
+                                     DBJCS_FACTORYNAME,    // get to this function
+                                                           // implementation_ is never null as lambda is not called
+                                                           // if something goes wrong
+                                                           // also there is a log file named <app base name>.exe.log
+                                                           // and the dll_call returns the default value of whatever
+                                                           // type this lambda might return
                                      [](component_a_factory_fp factory)
                                      {
                                        struct component_a *dbj_component = factory();
@@ -55,13 +55,13 @@ int main(int argc, char **argv)
   {
     show_component_info(COMPONENT_B_DLL_NAME);
 
-    dll_call<component_b_factory_fp>(COMPONENT_B_DLL_NAME,      // load this dll
-                                     DBJCS_FACTORYNAME, // get to this function
-                                                                // implementation_ is never null as lambda is not called
-                                                                // if something goes wrong
-                                                                // also there is a log file named <app base name>.exe.log
-                                                                // and the dll_call returns the default value of whatever
-                                                                // type this lambda might return
+    dll_call<component_b_factory_fp>(COMPONENT_B_DLL_NAME, // load this dll
+                                     DBJCS_FACTORYNAME,    // get to this function
+                                                           // implementation_ is never null as lambda is not called
+                                                           // if something goes wrong
+                                                           // also there is a log file named <app base name>.exe.log
+                                                           // and the dll_call returns the default value of whatever
+                                                           // type this lambda might return
                                      [&](component_b_factory_fp factory)
                                      {
                                        struct component_shmem *the_component = factory();

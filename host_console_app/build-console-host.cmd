@@ -1,7 +1,7 @@
 @rem
 @rem
 @echo off
-@cls
+@rem cls
 setlocal
 set "sourcebasename=dbj-c-host"
 set "build=..\Build"

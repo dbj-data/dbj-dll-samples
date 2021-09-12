@@ -1,6 +1,6 @@
 #ifndef COMPONENT_A_INC_
 #define COMPONENT_A_INC_
-#include "../dbj-string.h"
+#include <dbj_capi/dbj-string.h>
 #ifdef __cplusplus
 extern "C"
 {
