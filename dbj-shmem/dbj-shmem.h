@@ -1,5 +1,5 @@
-#ifndef COMPONENT_B_INC_
-#define COMPONENT_B_INC_
+#ifndef DBJ_SHMEM_INC_
+#define DBJ_SHMEM_INC_
 
 #include <dbj_capi/dbj-string.h>
 #include <stdbool.h>
@@ -32,4 +32,4 @@ extern "C"
 #ifdef __cplusplus
 } // extern "C"
 #endif // __cplusplus
-#endif // COMPONENT_B_INC_
+#endif // DBJ_SHMEM_INC_
