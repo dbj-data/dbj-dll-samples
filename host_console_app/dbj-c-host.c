@@ -12,6 +12,7 @@
 #include "../A/component-a.h"
 #include "../dbj-shmem/dbj-shmem.h"
 #include "../dbj-vector/dbj-vector.h"
+#include "../dbj-syserrmsg/dbj-syserrmsg.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -88,11 +89,24 @@ static inline void dbj_vector_component_user(dbj_vector_component_fp factory)
 
   imp->clear(vec);
 }
+
+static inline void syserrmsg_component_user(component_syserrmsg_factory_fp factory)
+{
+  struct component_syserrmsg *imp = factory();
+  for (int k = 0; k < 256; ++k)
+  {
+    dbj_string_512 msg_ = imp->error_message(imp, k);
+    DBG_PRINT("Error num: %d, message: %s", k, msg_);
+  }
+}
 /* ----------------------------------------------------------------------------------------------- */
 int main(int argc, char **argv)
 {
   DBJCS_LOADER_LOG("Starting: %s", argv[0]);
   dbjcapi_memory_info(stderr);
+
+  show_component_info(DBJ_SYSERRMSG_DLL_NAME);
+  DBJCS_FACTORY_CALL(DBJ_SYSERRMSG_DLL_NAME, component_syserrmsg_factory_fp, syserrmsg_component_user);
 
   show_component_info(COMPONENT_FILENAME_DBJ_VECTOR);
   DBJCS_FACTORY_CALL(COMPONENT_FILENAME_DBJ_VECTOR, dbj_vector_component_fp, dbj_vector_component_user);
