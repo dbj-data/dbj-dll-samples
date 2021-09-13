@@ -95,12 +95,13 @@ static inline void syserrmsg_component_user(component_syserrmsg_factory_fp facto
   struct component_syserrmsg *imp = factory();
   imp->also_to_stderr(true);
   dbj_string_512 msg_;
-  for (int k = 0; k < 512; ++k)
+  // probe the existence of messages [0 .. 65535)
+  for (int k = 2900; k < 3100; ++k)
   {
     msg_ = imp->error_message(imp, k);
     if (DBJ_STRING_IS_EMPTY(msg_))
       continue;
-    DBG_PRINT("Error[%4d] : %s", k, msg_.data);
+    DBG_PRINT("Error[%6d] : %s", k, msg_.data);
   }
 }
 /* ----------------------------------------------------------------------------------------------- */
@@ -112,7 +113,6 @@ int main(int argc, char **argv)
   show_component_info(DBJ_SYSERRMSG_DLL_NAME);
   DBJCS_FACTORY_CALL(DBJ_SYSERRMSG_DLL_NAME, component_syserrmsg_factory_fp, syserrmsg_component_user);
 
-#if 0
   show_component_info(COMPONENT_FILENAME_DBJ_VECTOR);
   DBJCS_FACTORY_CALL(COMPONENT_FILENAME_DBJ_VECTOR, dbj_vector_component_fp, dbj_vector_component_user);
 
@@ -121,7 +121,6 @@ int main(int argc, char **argv)
 
   show_component_info(DBJ_SHMEM_DLL_NAME);
   DBJCS_FACTORY_CALL(DBJ_SHMEM_DLL_NAME, component_shmem_factory_fp, shmem_component_user);
-#endif // 0
 
   DBJCS_LOADER_LOG("Ending: %s", argv[0]);
   dbjcapi_memory_info(stderr);

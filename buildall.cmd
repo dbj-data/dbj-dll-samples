@@ -8,6 +8,12 @@ popd
 popd
 
 pushd .
+pushd .\dbj-syserrmsg
+call .\build-dbj-syserrmsg.cmd
+popd
+popd
+
+pushd .
 pushd .\dbj-shmem
 call .\build-dbj-shmem.cmd
 popd
