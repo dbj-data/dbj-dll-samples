@@ -17,6 +17,7 @@ DBJ_COMPONENT_UNLOADER_IMPLEMENTATION;
 // https://docs.microsoft.com/en-us/windows/win32/netmgmt/looking-up-text-for-error-code-numbers
 
 static HMODULE netmsg_handle_ = NULL;
+static bool also_dump_to_stderr_ = false;
 
 static dbj_string_512
 DisplayErrorText(
@@ -69,19 +70,38 @@ DisplayErrorText(
              0,
              NULL)))
     {
-        // DWORD dwBytesWritten;
-        //
-        // Output message string on stderr.
-        //
-        // WriteFile(
-        //     GetStdHandle(STD_ERROR_HANDLE),
-        //     MessageBuffer,
-        //     dwBufferLength,
-        //     &dwBytesWritten,
-        //     NULL);
+        if (also_dump_to_stderr_)
+        {
+            dbj_string_512 final_buffer_ = {{0}};
+
+#if 1
+            static_assert(_countof(final_buffer_.data) == sizeof(final_buffer_.data), "count and sizeof");
+#endif
+
+            // C11 --> int snprintf_s(char *restrict buffer, rsize_t bufsz, const char *restrict format, ...);
+            int snprintf_rez = _snprintf_s((char *restrict)final_buffer_.data,
+                                           (rsize_t)sizeof(final_buffer_.data) - 1,
+                                           _TRUNCATE,
+                                           (const char *restrict)"[%4d]: %s", dwLastError, MessageBuffer);
+
+            DBJ_ASSERT(snprintf_rez > 0);
+
+            // message to stderr.
+            DWORD dwBytesWritten = 0;
+            // no error checking, yes I know, I know ...
+            // Roadmap: send to dbj_syslog.dll ;)
+            BOOL write_file_rez = WriteFile(
+                GetStdHandle(STD_ERROR_HANDLE),
+                final_buffer_.data,
+                snprintf_rez, /* write only this much */
+                &dwBytesWritten,
+                NULL);
+
+            DBJ_ASSERT(write_file_rez);
+        }
 
         // basically nobody knows what is the win err max message length
-        // maybe it is 512 since that is a BUFSIZ
+        // maybe it is 512 since that is a BUFSIZ, me thinks
         DBJ_ASSERT(dwBufferLength < 512);
 
         DBJ_STRING_ASSIGN(msg_, MessageBuffer);
@@ -106,8 +126,16 @@ static dbj_string_512 error_message_implementation_(struct component_syserrmsg *
     return DisplayErrorText(error_code);
 }
 /* --------------------------------------------------------------------------------- */
+static void also_to_stderr_implementation(bool arg_)
+{
+    also_dump_to_stderr_ = arg_;
+}
+/* --------------------------------------------------------------------------------- */
 /* interface implementation */
-static struct component_syserrmsg interface_implementation_ = {.error_message = error_message_implementation_};
+static struct component_syserrmsg interface_implementation_ = {
+
+    .also_to_stderr = also_to_stderr_implementation,
+    .error_message = error_message_implementation_};
 
 struct component_syserrmsg *dbj_component_factory(void)
 {
