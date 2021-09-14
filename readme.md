@@ -76,7 +76,7 @@ typedef struct component_a * (component_a_factory_fp)(void);
 
 `dbj-component-loader.h` contains a macro that does it  all.  It allows user of dbj componet to code a callback that will receive a factory function pointer.
 ```cpp
-#define DBJCS_FACTORY_CALL(
+#define DBJCS_CALL(
 dll_name_, 
 fun_name_, 
 RFP,          // the factory function pointer 
@@ -120,7 +120,7 @@ Let us call that `get42` :
 void use_component_a ( component_a_factory_fp factory_) ;
 
  // execute the load and call the callback
-DBJCS_FACTORY_CALL( 
+DBJCS_CALL( 
   "component_a.dll",
  "dbj_component_factory", 
  component_a_factory_fp,

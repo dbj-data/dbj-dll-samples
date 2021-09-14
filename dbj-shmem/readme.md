@@ -70,7 +70,7 @@ Using the DBJ Component loader that callback is used typically like so:
 ```cpp
 int main(int argc, char **argv)
 {
-  DBJCS_FACTORY_CALL(
+  DBJCS_CALL(
       /* dll file name */
       "dbj-shmem.dll", 
       /* 

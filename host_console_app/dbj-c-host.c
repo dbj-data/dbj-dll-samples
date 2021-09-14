@@ -1,5 +1,6 @@
 #define DBJ_CAPI_DEFAULT_LOG_IMPLEMENTATION
 #define DBJCS_DLL_CALLER_IMPLEMENTATION
+#define STB_DS_IMPLEMENTATION
 
 #include "memory_info.h"
 
@@ -111,16 +112,19 @@ int main(int argc, char **argv)
   dbjcapi_memory_info(stderr);
 
   show_component_info(DBJ_SYSERRMSG_DLL_NAME);
-  DBJCS_FACTORY_CALL(DBJ_SYSERRMSG_DLL_NAME, component_syserrmsg_factory_fp, syserrmsg_component_user);
+  DBJCS_CALL(DBJ_SYSERRMSG_DLL_NAME, component_syserrmsg_factory_fp, syserrmsg_component_user);
 
   show_component_info(COMPONENT_FILENAME_DBJ_VECTOR);
-  DBJCS_FACTORY_CALL(COMPONENT_FILENAME_DBJ_VECTOR, dbj_vector_component_fp, dbj_vector_component_user);
+  DBJCS_CALL(COMPONENT_FILENAME_DBJ_VECTOR, dbj_vector_component_fp, dbj_vector_component_user);
 
   show_component_info(COMPONENT_A_DLL_NAME);
-  DBJCS_FACTORY_CALL(COMPONENT_A_DLL_NAME, component_a_factory_fp, component_a_user);
+  DBJCS_CALL(COMPONENT_A_DLL_NAME, component_a_factory_fp, component_a_user);
 
   show_component_info(DBJ_SHMEM_DLL_NAME);
-  DBJCS_FACTORY_CALL(DBJ_SHMEM_DLL_NAME, component_shmem_factory_fp, shmem_component_user);
+  DBJCS_CALL(DBJ_SHMEM_DLL_NAME, component_shmem_factory_fp, shmem_component_user);
+  // hit the component cache
+  DBJCS_CALL(DBJ_SHMEM_DLL_NAME, component_shmem_factory_fp, shmem_component_user);
+  DBJCS_CALL(DBJ_SHMEM_DLL_NAME, component_shmem_factory_fp, shmem_component_user);
 
   DBJCS_LOADER_LOG("Ending: %s", argv[0]);
   dbjcapi_memory_info(stderr);
