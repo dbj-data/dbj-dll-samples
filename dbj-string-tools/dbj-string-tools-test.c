@@ -1,38 +1,122 @@
-#define DBJ_CAPI_DEFAULT_LOG_IMPLEMENTATION
-#define DBJCS_DLL_CALLER_IMPLEMENTATION
-#define STB_DS_IMPLEMENTATION
+// (c)  2021 by dbj at dbj dot org
+#include <Windows.h>
 
-#include <dbj_capi/cdebug.h>
-#include "../dbj-component.h"
-#include <dbj_capi/dbj-string.h>
-#include "../dbj-component-loader.h"
-
-// components are partitioned in their own projects
+// component header
 #include "dbj-string-tools.h"
 
 #include <assert.h>
 #include <stdio.h>
-/* ----------------------------------------------------------------------------------------------- */
-// same for each component
-static inline void get_version_cb(DBJ_COMPONENT_SEMVER_FP get_version)
+#include <stdbool.h>
+
+#pragma region infrastructure
+#ifdef _DEBUG
+
+#ifndef OutputDebugString
+__declspec(dllimport) void __stdcall OutputDebugStringA(
+    const char *const /*lpOutputString*/
+);
+#endif // !OutputDebugString
+
+static inline void DBJ_OUTPUT_DBG_STRNG(const char *format_, ...)
 {
-    struct dbj_component_version_ info_ = get_version();
-    DBG_PRINT("\ncomponent dll version info");
-    DBG_PRINT("\nMajor: %d, minor: %d, patch: %d", info_.major, info_.minor, info_.patch);
-    DBG_PRINT("\nDescription: %s", info_.description);
-}
-/* ----------------------------------------------------------------------------------------------- */
-static void show_component_info(const char component_dll_name[static 1])
-{
-    DBJCS_ANY_CALL(component_dll_name,
-                   /* same for each component */
-                   DBJCS_SEMVER_NAME,
-                   /* same for each component */
-                   DBJ_COMPONENT_SEMVER_FP,
-                   /* local call back */
-                   get_version_cb);
+    char buffy[1024] = {0};
+    int nBuf = 0;
+    va_list args = 0;
+    va_start(args, format_);
+    nBuf = _vsnprintf(buffy, 1024, format_, args);
+    if (nBuf > -1)
+        OutputDebugStringA(buffy);
+    else
+        OutputDebugStringA(__FILE__ " OutputDebugStringA buffer overflow\n");
+    va_end(args);
 }
 
+#else
+#define DBJ_OUTPUT_DBG_STRNG(format_, ...) ((void)0)
+#endif
+
+#undef DBG_PRINT
+#ifdef _DEBUG
+#define DBG_PRINT(...) DBJ_OUTPUT_DBG_STRNG(__VA_ARGS__)
+#else
+#define DBG_PRINT(...) __noop
+#endif // ! _DEBUG
+/*
+EXPORTS
+dbj_component_can_unload_now    PRIVATE
+dbj_component_factory           PRIVATE
+dbj_component_version           PRIVATE
+*/
+#define DBJCS_CAN_UNLOAD_NAME "dbj_component_can_unload_now"
+#define DBJCS_FACTORYNAME "dbj_component_factory"
+#define DBJCS_SEMVER_NAME "dbj_component_version"
+
+/*
+each dbj-component has to exhibit semantic versioning 3 values
+and description string up to 0xFF chars long
+these structure is required for client code
+*/
+struct dbj_component_version_
+{
+    unsigned major;
+    unsigned minor;
+    unsigned patch;
+    char description[0xFF];
+};
+
+typedef struct dbj_component_version_ (*DBJ_COMPONENT_SEMVER_FP)(void);
+// unloading is also exactly the same for every DBJ Component
+// because each one of them implement this function
+typedef bool (*DBJ_COMPONENT_UNLOAD_FP)(void);
+
+/*
+return dll handle
+*/
+static inline HINSTANCE dbj_dll_load(
+    /* just a file name, not a path! */
+    const char dll_file_name_[static 1])
+{
+    HINSTANCE dll_handle_ = LoadLibraryExA(
+        dll_file_name_,
+        NULL,
+        LOAD_LIBRARY_SEARCH_APPLICATION_DIR | LOAD_LIBRARY_SEARCH_SYSTEM32);
+
+    if (NULL == dll_handle_)
+    {
+        DBG_PRINT("DLL Loader error: [%d]. "
+                  "By design looking only in system folders and application folder."
+                  " Could not find the DLL by name: %s",
+                  GetLastError(), dll_file_name_);
+    }
+    return dll_handle_;
+}
+
+static inline void *dbj_dll_get_function(HINSTANCE *dll_handle_, char const fun_name_[static 1])
+{
+    // Funny fact: GetProcAddress has no unicode equivalent
+    FARPROC result =
+        GetProcAddress((HINSTANCE)*dll_handle_, fun_name_);
+    if (result == 0)
+    {
+        DBG_PRINT("\nFailed to find the address for a function: %s\n", fun_name_);
+    }
+    return result;
+}
+
+/*
+Call any function from the DLL whose function full signature you know
+RFP == Required Function Pointer
+*/
+#define DBJ_DLL_CALL(dll_name_, function_name, RFP, callback_)                  \
+    do                                                                          \
+    {                                                                           \
+        HINSTANCE dll_handle_ = dbj_dll_load(dll_name_);                        \
+        RFP function_ = (RFP)dbj_dll_get_function(&dll_handle_, function_name); \
+        if (function_)                                                          \
+            callback_(function_);                                               \
+    } while (0)
+
+#pragma endregion // infrastructure
 /* ----------------------------------------------------------------------------------------------- */
 static inline void test_driver(
     struct dbj_string_tools *dbj_st,
@@ -105,11 +189,40 @@ static inline void dbj_tokenizer_test(dbj_string_utils_factory_fp factory)
 /* ----------------------------------------------------------------------------------------------- */
 int main(int argc, char **argv)
 {
-    DBJCS_LOADER_LOG("Starting: %s", argv[0]);
+    HINSTANCE dll_handle_ = dbj_dll_load(DBJ_STRING_TOOLS_DLL_NAME);
 
-    show_component_info(DBJ_STRING_TOOLS_DLL_NAME);
-    DBJCS_CALL(DBJ_STRING_TOOLS_DLL_NAME, dbj_string_utils_factory_fp, dbj_tokenizer_test);
+    if (0 == dll_handle_)
+        return EXIT_FAILURE;
 
-    DBJCS_LOADER_LOG("Ending: %s", argv[0]);
-    return 0;
+    // using the version info is exactly the same for every DBJ Component
+    DBJ_COMPONENT_SEMVER_FP get_version =
+        (DBJ_COMPONENT_SEMVER_FP)dbj_dll_get_function(&dll_handle_, DBJCS_SEMVER_NAME);
+    if (get_version)
+    {
+        struct dbj_component_version_ info_ = get_version();
+        DBG_PRINT("\n" DBJ_STRING_TOOLS_DLL_NAME " version info");
+        DBG_PRINT("\nMajor: %d, minor: %d, patch: %d", info_.major, info_.minor, info_.patch);
+        DBG_PRINT("\nDescription: %s", info_.description);
+    }
+
+    // specific for this component
+    dbj_string_utils_factory_fp factory_fun =
+        (dbj_string_utils_factory_fp)dbj_dll_get_function(&dll_handle_, DBJCS_FACTORYNAME);
+    if (factory_fun)
+        dbj_tokenizer_test(factory_fun);
+
+    // unloading is also exactly the same for every DBJ Component
+    DBJ_COMPONENT_UNLOAD_FP can_unload =
+        (DBJ_COMPONENT_UNLOAD_FP)dbj_dll_get_function(&dll_handle_, DBJCS_CAN_UNLOAD_NAME);
+    if (can_unload)
+    {
+        if (can_unload())
+            if (!FreeLibrary(dll_handle_))
+            {
+                DBG_PRINT("\ndbjdll_load FreeLibrary failed. The DLL name is: %s\n", DBJ_STRING_TOOLS_DLL_NAME);
+                return EXIT_FAILURE;
+            }
+    }
+
+    return EXIT_SUCCESS;
 }

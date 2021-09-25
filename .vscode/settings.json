@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "*.go": "go",
+        "*.hta": "html",
         "xstring": "cpp",
         "xutility": "cpp",
         "dbj-component.h": "c",
@@ -8,7 +9,8 @@
         "iosfwd": "cpp",
         "default_log.h": "c",
         "cdebug.h": "c",
-        "ccommon.h": "c"
+        "ccommon.h": "c",
+        "xlocbuf": "c"
     },
     "editor.formatOnSave": true
 }

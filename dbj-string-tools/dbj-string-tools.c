@@ -3,14 +3,31 @@
 #include "../dbj-component.h"
 // #include <dbj_capi/dbj-string.h>
 
-// #include <intrin.h>
-
 // dbj_component_version() generated here
 DBJ_COMPONENT_VERSION_IMPLEMENTATION(0, 1, 0, "dbj string operations");
 /* --------------------------------------------------------------------------------- */
 // dbj_component_can_unload_now() is part of dbj-component definition
-// it is also generated here
-DBJ_COMPONENT_UNLOADER_IMPLEMENTATION;
+// one usualy used the macro DBJ_COMPONENT_UNLOADER_IMPLEMENTATION
+// to generate the implementation, or one can do it himself
+// remember: we use only clang C and we work only on Windows
+#include <intrin.h>
+
+static volatile long component_counter_ = 0;
+
+__attribute__((constructor)) static void component_ctor(void)
+{
+    _InterlockedIncrement(&component_counter_);
+}
+
+__attribute__((destructor)) static void component_dtor()
+{
+    _InterlockedDecrement(&component_counter_);
+}
+
+bool dbj_component_can_unload_now(void)
+{
+    return component_counter_ == 0;
+}
 /* --------------------------------------------------------------------------------- 
 (c) 2021 by dbj@dbj.org https://license_dbj
 this tokenzier was completely dreamt-up by me
