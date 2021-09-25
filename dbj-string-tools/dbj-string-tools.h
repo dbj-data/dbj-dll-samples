@@ -1,7 +1,6 @@
-#ifndef COMPONENT_A_INC_
-#define COMPONENT_A_INC_
+#pragma once
 
-#include <dbj_capi/dbj-string.h>
+#include <errno.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -16,6 +15,8 @@ extern "C"
     // interface is a struct with data and function pointers
     // the interface :
 
+    // dbj strings and string tools work on arrays of chars, not char pointers
+    // thus the opportunity to bound them to some same value has been used
     enum
     {
         dbj_string_tools_max_input_count = 0xFF
@@ -23,13 +24,13 @@ extern "C"
 
     struct dbj_string_tools
     {
-        unsigned (*tokenizer)(
+        errno_t (*tokenizer)(
             // string of tokens
             const unsigned /*token_len*/, const char /*token*/[/*token_len*/],
             // input string
             const unsigned /*input_len*/, const char /*input*/[/*input_len*/],
-            // result array
-            // zero element: no of word found
+            // result array strcuture:
+            // zero element: no of words found (0 on error)
             // then pairs of words begin and end locations
             // then zeroes to the end of array
             // on bad input no of words found is 0 and errno == EINVAL
@@ -50,26 +51,26 @@ extern "C"
     //
     // 'dbj_component_can_unload_now' and 'dbj_component_version'
     // have the same foot print for each components
+    // in case you want to use them
     // their function pointers are declared in
     // dbj-component.h
     //
 
-    // factory function for this component is implemented as:
+    // factory function for this component is implemented
+    // in the C file as:
     //
     // struct dbj_strong *dbj_component_factory(void)
     // {
     //     return &componenet_implementation_;
     // }
     //
-    // Only the "dbj_component_factory" has
+    // Of the three fuinctions from the def file,
+    // only the "dbj_component_factory" has
     // function pointer unique per each component
-    // its declaration is not required
-    // the factroy function function pointer
-    // unique for this component is:
+    // its declaration is the function pointer
+    // and for this component it is:
     typedef struct dbj_string_tools *(*dbj_string_utils_factory_fp)(void);
 
 #ifdef __cplusplus
 } // extern "C"
 #endif // __cplusplus
-
-#endif // COMPONENT_A_INC_

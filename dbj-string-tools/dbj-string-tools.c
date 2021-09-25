@@ -25,7 +25,7 @@ static inline bool char_in_string(const char chr_, unsigned len_, const char str
     return false;
 }
 
-static inline unsigned tokenzier_back(
+static inline errno_t tokenzier_back(
     unsigned output_idx, // the last end pos recorded or 0
     char *walker_,
     const unsigned token_len, const char token[static token_len],
@@ -54,30 +54,29 @@ static inline unsigned tokenzier_back(
     {
         // save the num of words into the position 0
         output[0] = output_idx / 2;
-        return output[0];
+        return errno;
     }
     else
         return tokenzier_back(output_idx, walker_, token_len, token, input_len, input, output_len, output);
 }
 
-static inline unsigned tokenzier(
+static inline errno_t tokenzier(
     const unsigned token_len, const char token[static token_len],
     const unsigned input_len, const char input[static input_len],
     const unsigned output_len, unsigned output[static output_len])
 {
     errno = 0; // important!
+    output[0] = 0;
 
     if ((token_len < 1) || (input_len < token_len) || (input_len >= dbj_string_tools_max_input_count))
     {
-        errno = EINVAL;
-        return 0;
+        return errno = EINVAL;
     }
 
     // empty input
     if (input[0] == '\0')
     {
-        errno = EINVAL;
-        return 0;
+        return errno = EINVAL;
     }
 
     char *walker_ = (char *)input;
@@ -88,8 +87,7 @@ static inline unsigned tokenzier(
     {
         if (*walker_ == '\0')
         {
-            errno = EINVAL;
-            return 0;
+            return errno = EINVAL;
         }
         ++walker_;
     }

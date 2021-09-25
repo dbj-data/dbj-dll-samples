@@ -41,17 +41,19 @@ static inline void test_driver(
 {
     unsigned result[input_len / 2 /*- token_len*/];
 
-    DBG_PRINT("\n\nInput: \"%s\"\ntokens: \"%s\"\n", input, token);
+    DBG_PRINT("\n\nInput: \"%s\"\ntokens: \"%s\"", input, token);
 
-    const unsigned no_of_words = dbj_st->tokenizer(
+    const unsigned error_ = dbj_st->tokenizer(
         token_len, token,
         input_len, input,
         sizeof result, result);
 
-    DBG_PRINT("\nRezult\terrno:%3d , message: \"%s\"", errno, (errno ? strerror(errno) : "OK"));
+    const unsigned no_of_words = result[0];
 
-    if (errno > 0)
-        goto exit;
+    DBG_PRINT("\nRezult\terrno:%3d , message: \"%s\"", error_, (error_ ? strerror(error_) : "OK"));
+
+    if (error_ > 0)
+        return;
 
     DBG_PRINT("\t, Output: { %3d ", no_of_words);
     for (unsigned w = 0, j = 1; w < (no_of_words); ++w, j += 2)
@@ -65,14 +67,13 @@ static inline void test_driver(
     //  { words_num, w1b, w1e, w2b, w2e, w3b, w3e , 0, ... }
     //      0          1   2     3   4    5    6
     //
-    for (unsigned w = 0, j = 1; w < (no_of_words); ++w, j += 2)
+    for (unsigned w = 0, j = 1; w < no_of_words; ++w, j += 2)
     {
-        DBG_PRINT("\nWord:%3d {%3d,%3d}\t", (w + 1), result[j], result[j + 1]);
+        DBG_PRINT("Word:%3d {%3d,%3d}\t", (w + 1), result[j], result[j + 1]);
         for (unsigned k = result[j]; k < result[j + 1]; ++k)
             DBG_PRINT("%c", input[k]);
+        DBG_PRINT("\n");
     }
-exit:
-    DBG_PRINT("\n");
 }
 // this is a callback
 // typedef struct dbj_string_tools *(*dbj_string_utils_factory_fp)(void);
