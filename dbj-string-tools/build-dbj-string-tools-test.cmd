@@ -1,13 +1,11 @@
-@rem
-@rem
 @echo off
 @rem cls
+
 setlocal
 
-@rem Setup VS2019
 call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
 
-set "sourcebasename=dbj-c-host"
+set "sourcebasename=dbj-string-tools-test"
 set "build=..\Build"
 @md %build% 2>nul
 
@@ -17,7 +15,7 @@ set "build=..\Build"
 @rem /TC -- threat all as C
 @rem /MTd -- use static debug runtime
 @rem /MDd -- use debug dll runtime
-@clang-cl %sourcebasename%.c /I "F:\machine_wide" /GR- /MTd /D_DEBUG /D_HAS_EXCEPTIONS=0 /nologo /Zi /W3 /Fo%build%\ /Fe%build%\%sourcebasename%.exe 
+@clang-cl %sourcebasename%.c /I "F:\machine_wide" /GR- /MTd /D_DEBUG /D_CRT_SECURE_NO_WARNINGS /D_HAS_EXCEPTIONS=0 /nologo /Zi /W3 /Fo%build%\ /Fe%build%\%sourcebasename%.exe 
 
 @echo.
 @echo Done building: %build%\%sourcebasename%.exe

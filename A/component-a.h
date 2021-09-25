@@ -24,7 +24,7 @@ extern "C"
         dbj_string_1024 (*connection_string)(struct component_a *);
     };
 
-    // each DBJ COMPOENT has the same def file
+    // each DBJ COMPONENT has the same def file
     //
     // EXPORTS
     // dbj_component_can_unload_now    PRIVATE
