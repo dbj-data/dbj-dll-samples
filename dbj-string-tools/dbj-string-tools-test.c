@@ -10,14 +10,7 @@
 
 #pragma region infrastructure
 #ifdef _DEBUG
-
-#ifndef OutputDebugString
-__declspec(dllimport) void __stdcall OutputDebugStringA(
-    const char *const /*lpOutputString*/
-);
-#endif // !OutputDebugString
-
-static inline void DBJ_OUTPUT_DBG_STRNG(const char *format_, ...)
+static inline void DBG_PRINT(const char *format_, ...)
 {
     char buffy[1024] = {0};
     int nBuf = 0;
@@ -30,17 +23,10 @@ static inline void DBJ_OUTPUT_DBG_STRNG(const char *format_, ...)
         OutputDebugStringA(__FILE__ " OutputDebugStringA buffer overflow\n");
     va_end(args);
 }
-
 #else
-#define DBJ_OUTPUT_DBG_STRNG(format_, ...) ((void)0)
+#define DBG_PRINT(format_, ...) ((void)0)
 #endif
 
-#undef DBG_PRINT
-#ifdef _DEBUG
-#define DBG_PRINT(...) DBJ_OUTPUT_DBG_STRNG(__VA_ARGS__)
-#else
-#define DBG_PRINT(...) __noop
-#endif // ! _DEBUG
 /*
 EXPORTS
 dbj_component_can_unload_now    PRIVATE
@@ -51,11 +37,6 @@ dbj_component_version           PRIVATE
 #define DBJCS_FACTORYNAME "dbj_component_factory"
 #define DBJCS_SEMVER_NAME "dbj_component_version"
 
-/*
-each dbj-component has to exhibit semantic versioning 3 values
-and description string up to 0xFF chars long
-these structure is required for client code
-*/
 struct dbj_component_version_
 {
     unsigned major;
@@ -66,7 +47,7 @@ struct dbj_component_version_
 
 typedef struct dbj_component_version_ (*DBJ_COMPONENT_SEMVER_FP)(void);
 // unloading is also exactly the same for every DBJ Component
-// because each one of them implement this function
+// because each one of them implements this function
 typedef bool (*DBJ_COMPONENT_UNLOAD_FP)(void);
 
 /*
@@ -102,20 +83,6 @@ static inline void *dbj_dll_get_function(HINSTANCE *dll_handle_, char const fun_
     }
     return result;
 }
-
-/*
-Call any function from the DLL whose function full signature you know
-RFP == Required Function Pointer
-*/
-#define DBJ_DLL_CALL(dll_name_, function_name, RFP, callback_)                  \
-    do                                                                          \
-    {                                                                           \
-        HINSTANCE dll_handle_ = dbj_dll_load(dll_name_);                        \
-        RFP function_ = (RFP)dbj_dll_get_function(&dll_handle_, function_name); \
-        if (function_)                                                          \
-            callback_(function_);                                               \
-    } while (0)
-
 #pragma endregion // infrastructure
 /* ----------------------------------------------------------------------------------------------- */
 static inline void test_driver(
