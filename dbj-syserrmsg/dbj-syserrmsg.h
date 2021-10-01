@@ -1,7 +1,7 @@
 #ifndef DBJ_SYSERRMSG_INC_
 #define DBJ_SYSERRMSG_INC_
 
-#include <dbj_capi/dbj-string.h>
+// #include <dbj_capi/dbj-string.h>
 #include <stdbool.h>
 
 #ifdef __cplusplus
@@ -11,6 +11,12 @@ extern "C"
 
 //  make sure build creates this dll for this component
 #define DBJ_SYSERRMSG_DLL_NAME "dbj-syserrmsg.dll"
+
+    // from dbj_capi/dbj-string.h
+    typedef struct dbj_string_512
+    {
+        char data[512];
+    } dbj_string_512;
 
     // interface is a struct
     struct component_syserrmsg
