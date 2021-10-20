@@ -1,6 +1,9 @@
 #ifndef DBJ_COMPONENT_INCLUDED
 #define DBJ_COMPONENT_INCLUDED
-/*
+/* (c) 2019 - 2021 by dbj.org   -- https://dbj.org/license_dbj
+
+DBJCS == DBJ Component System
+
 one dbj component == one dll == one component interface == one struct
 
 same def for all dll's:
@@ -11,8 +14,20 @@ dbj_component_factory           PRIVATE
 dbj_component_version           PRIVATE
 
 */
-#include <dbj_capi/ccommon.h>
-#include <dbj_capi/dbj_windows_include.h>
+
+#ifdef __cplusplus
+#define DBJ_EXTERN_C_BEGIN \
+    extern "C"             \
+    {
+#define DBJ_EXTERN_C_END }
+#else // ! __cplusplus
+#define DBJ_EXTERN_C_BEGIN
+#define DBJ_EXTERN_C_END
+#endif // !__cplusplus
+
+// #include <dbj_capi/ccommon.h>
+// #include <dbj_capi/dbj_windows_include.h>
+#include <stdbool.h>
 #include <intrin.h>
 
 // dbj-component working or not in the presence of MT is left to the requirements, ie. it is not
@@ -44,7 +59,7 @@ DBJ_EXTERN_C_BEGIN
 
 // each dbj-component has to exhibit semantic versioning 3 values
 // and description string up to 0xFF chars long
-// these structure is required for client code
+// this structure is required for client code
 struct dbj_component_version_
 {
     unsigned major;

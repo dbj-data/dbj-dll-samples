@@ -90,13 +90,13 @@ extern "C"
 		}
 	}
 
-	static inline char const *decimal_from(long number, char *buffer)
+	static inline char const *dbj_decimal_from(long number, const unsigned count, char buffer[static count])
 	{
 		to_decimal(number, buffer);
 		return buffer;
 	}
 
-#define DECIMAL_FROM_TEST_
+// #define DECIMAL_FROM_TEST_
 #ifdef DECIMAL_FROM_TEST_
 #include <stdio.h>
 #include <limits.h> // std::numeric_limits

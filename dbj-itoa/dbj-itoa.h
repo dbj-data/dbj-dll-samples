@@ -2,33 +2,25 @@
 
 #include <errno.h>
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif // __cplusplus
-
 //  make sure build script creates this dll for this component
 #define DBJ_STRING_TOOLS_DLL_NAME "dbj-itoa.dll"
 
-    // the one and only interface
+// the one and only interface
 
-    enum
-    {
-        dbj_itoa_min_buffer_count = 0xFF
-    };
+enum
+{
+    dbj_itoa_min_buffer_count = 0xF
+};
 
-    struct dbj_itoa
-    {
-        // right now there is no error signaling whatsoever
-        // roadmap is to return NULL on error
-        char const *(*decimal_from)(long /* input */, const unsigned, char[]);
-    };
+typedef struct dbj_itoa_ dbj_itoa;
+struct dbj_itoa_
+{
+    // right now there is no error signaling whatsoever
+    // roadmap is to return NULL on error
+    char const *(*decimal_from)(long /* input */, const unsigned, char[]);
+};
 
-    typedef struct dbj_itoa *(*dbj_itoa_factory_fp)(void);
-
-#ifdef __cplusplus
-} // extern "C"
-#endif // __cplusplus
+typedef dbj_itoa *(*dbj_itoa_factory_fp)(void);
 
 // each DBJ COMPONENT has the same def file
 //

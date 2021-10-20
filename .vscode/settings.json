@@ -10,7 +10,8 @@
         "default_log.h": "c",
         "cdebug.h": "c",
         "ccommon.h": "c",
-        "xlocbuf": "c"
+        "xlocbuf": "c",
+        "decimal_from.h": "c"
     },
     "editor.formatOnSave": true
 }

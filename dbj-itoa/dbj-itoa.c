@@ -1,10 +1,15 @@
 
-
+/* --------------------------------------------------------------------------------- 
+(c) 2021 by dbj@dbj.org https://license_dbj
+*/
+#include "src/decimal_from.h" // this is not the public header!
 #include "../dbj-component.h"
-// #include <dbj_capi/dbj-string.h>
+#include "dbj-itoa.h"
+
+#include <string.h>
 
 // dbj_component_version() generated here
-DBJ_COMPONENT_VERSION_IMPLEMENTATION(0, 1, 0, "dbj itoa verious forms");
+DBJ_COMPONENT_VERSION_IMPLEMENTATION(0, 1, 0, "dbj itoa various forms");
 /* --------------------------------------------------------------------------------- */
 // dbj_component_can_unload_now() is part of dbj-component definition
 // one usualy used the macro DBJ_COMPONENT_UNLOADER_IMPLEMENTATION
@@ -28,14 +33,10 @@ bool dbj_component_can_unload_now(void)
 {
     return component_counter_ == 0;
 }
-/* --------------------------------------------------------------------------------- 
-(c) 2021 by dbj@dbj.org https://license_dbj
-*/
-#include "src/decimal_from.h" // this is not the public header!
 /* --------------------------------------------------------------------------------- */
 //  private instance of the interface implementation
 /* --------------------------------------------------------------------------------- */
-static struct dbj_itoa implementation_ = {
+static dbj_itoa implementation_ = {
     // here connect function pointers of the public interface
     // to the private implementations
     // thus, both sides have to exhibit matching signatures
@@ -47,7 +48,7 @@ static struct dbj_itoa implementation_ = {
 // must have exported factory function
 // with the name "dbj_component_factory"
 // see the def file in this folder
-struct dbj_itoa *dbj_component_factory(void)
+dbj_itoa *dbj_component_factory(void)
 {
     return &implementation_;
 }
