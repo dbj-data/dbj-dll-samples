@@ -24,17 +24,18 @@ extern "C"
 
     struct dbj_string_tools
     {
+        // rezult is array of 'word begin'/'word end' location pairs
         errno_t (*tokenizer)(
             // string of tokens
-            const unsigned /*token_len*/, const char /*token*/[/*token_len*/],
+            const unsigned, const char[],
             // input string
-            const unsigned /*input_len*/, const char /*input*/[/*input_len*/],
-            // result array strcuture:
-            // zero element: no of words found (0 on error)
-            // then pairs of words begin and end locations
+            const unsigned, const char[],
+            // result array structure:
+            // zero elements: no of words found (0 on error)
+            // then pairs of words, begin and end locations
             // then zeroes to the end of array
             // on bad input no of words found is 0 and errno == EINVAL
-            const unsigned /*output_len*/, unsigned /*output*/[/*output_len*/]);
+            const unsigned, unsigned /* the rezult array */[]);
     };
 
     // each DBJ COMPONENT has the same def file

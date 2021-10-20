@@ -94,6 +94,10 @@ static inline void test_driver(
 
     DBG_PRINT("\n\nInput: \"%s\"\ntokens: \"%s\"", input, token);
 
+    // Remember the result is, for example if 3 words found
+    //  { words_found, w1b, w1e, w2b, w2e, w3b, w3e , 0, ... }
+    //      0          1   2     3   4    5    6
+    //
     const unsigned error_ = dbj_st->tokenizer(
         token_len, token,
         input_len, input,
@@ -106,6 +110,8 @@ static inline void test_driver(
     if (error_ > 0)
         return;
 
+    //  print the output array of locations returned
+    //  { words_found, w1b, w1e, w2b, w2e, w3b, w3e , 0, ... }
     DBG_PRINT("\t, Output: { %3d ", no_of_words);
     for (unsigned w = 0, j = 1; w < (no_of_words); ++w, j += 2)
     {
@@ -113,11 +119,8 @@ static inline void test_driver(
     }
     DBG_PRINT(" }\n");
 
-    //  this is somewhat peculiar , remember result is
-    // for example if 3 words found
-    //  { words_num, w1b, w1e, w2b, w2e, w3b, w3e , 0, ... }
-    //      0          1   2     3   4    5    6
-    //
+    //  print all the words found
+    //  { words_found, w1b, w1e, w2b, w2e, w3b, w3e , 0, ... }
     for (unsigned w = 0, j = 1; w < no_of_words; ++w, j += 2)
     {
         DBG_PRINT("Word:%3d {%3d,%3d}\t", (w + 1), result[j], result[j + 1]);
