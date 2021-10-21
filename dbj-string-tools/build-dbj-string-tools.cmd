@@ -4,7 +4,9 @@
 @rem dependancy: dbj_capi 
 @rem member of machine_wide repo that contains all the "machine wide"
 @rem common stuff used by all the projects; on this machine from f:/machine_wide
-@REM F:\machine_wide>git remote -v
+@rem
+@REM F:\machine_wide, git remote -v yields:
+@REM
 @REM origin  https://github.com/dbj-data/machine_wide.git (fetch)
 @REM origin  https://github.com/dbj-data/machine_wide.git (push)
 @rem
@@ -14,7 +16,7 @@ setlocal
 
 @rem Setup VS2019
 @rem change to your local path, if need be
-call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
+call "D:\PROD\programs\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
 
 set "sourcebasename=dbj-string-tools"
 set "sourcefilename=%sourcebasename%"

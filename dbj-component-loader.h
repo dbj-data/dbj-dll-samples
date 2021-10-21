@@ -1,16 +1,23 @@
+#pragma once
 #ifndef DBJCS_DLL_LOADER_INC
 #define DBJCS_DLL_LOADER_INC
+#pragma clang system_header
 /* (c) 2019 - 2021 by dbj.org   -- https://dbj.org/license_dbj
 
 DBJCS == DBJ Component System
 		
-Here is dynamic dll loading and fetching a function from the said dll
+Here is dynamic dll loading and fetching a function from the said dll.
+This file is easy to understand if you start from the two macros at the bottom:
+
+DBJCS_CALL(dll_name_, RFP, callback_)
+
+DBJCS_ANY_CALL(dll_name_, function_name, RFP, callback_) 
+
 
 #define DBJCS_DLL_CALLER_IMPLEMENTATION  in exactly one place 
 */
 #include <dbj_capi/dbj_lock_unlock.h>
 
-void dbj_loader_descriptors_hash_destructor(void) __attribute__((destructor));
 /// --------------------------------------------------------------
 #ifdef DBJCS_DLL_CALLER_IMPLEMENTATION
 /// --------------------------------------------------------------
@@ -29,21 +36,42 @@ void dbj_loader_descriptors_hash_destructor(void) __attribute__((destructor));
 #include <stdio.h>
 
 DBJ_EXTERN_C_BEGIN
-/// --------------------------------------------------------------
-/// user can provide the actual log function for this loader, the required signature is
-/// extern "C" void (*user_log_FP) (const char* file, long line, const char* , ...);
-/// otherwise we will use dbj_capi default loader, based on a stderr redirection to file
+/* 
+user can provide the actual log function for this loader, the required signature is
+extern "C" void (*user_log_FP) (const char* file, long line, const char* , ...);
+otherwise we will use dbj_capi default loader, based on a stderr redirection to file
+*/
 #ifndef DBJCS_LOADER_LOG
 #define DBJCS_LOADER_LOG(...) dbjcapi_default_log_function(__FILE__, __LINE__, __VA_ARGS__)
 #endif // ! DBJCS_LOADER_LOG
 
-// one per one dll
+#pragma region hash table of states
+
+typedef struct dbjcs_loader_state dbjcs_loader_state;
+
+dbjcs_loader_state dbjloader_dll_unload(dbjcs_loader_state state);
+/* 
+unload all the dll's on app exit
+*/
+__attribute__((destructor)) void dbj_loader_descriptors_hash_destructor(void)
+{
+	for (int j = 0; j < stbds_hmlen(state_descriptors_hash); ++j)
+		dbjloader_dll_unload(state_descriptors_hash[j]);
+
+	stbds_hmfree(state_descriptors_hash);
+}
+
+/*
+ one loader state per one dll
+ */
 typedef struct dbjcs_loader_state
 {
-	/// dll_name_ is the HT key
-	/// DLL name should be just a "base file name.dll"
-	/// we do not want users to load the dll's from wherever on the machine
-	/// that is not going to work properly and is very unsafe
+	/* 
+	dll_name_ is the HT key
+	DLL name should be just a "base file name.dll"
+	we do not want users to load the dll's from wherever on the machine
+	that is not going to work properly and is very unsafe 
+	*/
 	dbj_string_128 key;
 	HINSTANCE dll_handle_;
 	// critical section might be in here
@@ -82,7 +110,8 @@ static bool dbj_loader_remove_from_hash(dbj_string_128 key_)
 	return stbds_hmdel(state_descriptors_hash, key_);
 }
 #endif // 0
-/// --------------------------------------------------------------
+
+/* -------------------------------------------------------------- */
 bool dbjcs_dll_loaded(dbjcs_loader_state *state_)
 {
 	DBJ_ASSERT(state_);
@@ -90,6 +119,8 @@ bool dbjcs_dll_loaded(dbjcs_loader_state *state_)
 	// until it is not dbjcapi_dll_unloaded no other DLL can be used and its function called
 	return state_->dll_handle_ != 0;
 }
+
+#pragma endregion hash table of states
 
 int dbjcs_assign_dll_name(dbjcs_loader_state *state, dbj_string_128 name_)
 {
@@ -117,7 +148,10 @@ int dbjcs_assign_dll_name(dbjcs_loader_state *state, dbj_string_128 name_)
 We *no longer* manage just a single DLL load 
 */
 dbjcs_loader_state dbjloader_load(
-	/* remember just file name, not a path */
+	/* 
+	remember just a file name, not a path! 
+	adversary might insert unwanted dll from an unwanted location
+	*/
 	const char dll_file_name_[static 1])
 {
 	dbjcs_loader_state state;
@@ -181,16 +215,6 @@ dbjcs_loader_state dbjloader_dll_unload(dbjcs_loader_state state)
 	}
 
 	return state;
-}
-
-/// --------------------------------------------------------------
-/// unload all the dll's on app exit
-void dbj_loader_descriptors_hash_destructor(void)
-{
-	for (int j = 0; j < stbds_hmlen(state_descriptors_hash); ++j)
-		dbjloader_dll_unload(state_descriptors_hash[j]);
-
-	stbds_hmfree(state_descriptors_hash);
 }
 
 /*

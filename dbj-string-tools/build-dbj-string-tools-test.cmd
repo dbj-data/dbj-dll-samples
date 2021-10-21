@@ -3,7 +3,7 @@
 
 setlocal
 
-call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
+call "D:\PROD\programs\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
 
 set "sourcebasename=dbj-string-tools-test"
 set "build=..\Build"

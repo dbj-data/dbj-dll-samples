@@ -28,6 +28,7 @@ dbj_component_version           PRIVATE
 // #include <dbj_capi/ccommon.h>
 // #include <dbj_capi/dbj_windows_include.h>
 #include <stdbool.h>
+#include <string.h>
 #include <intrin.h>
 
 // dbj-component working or not in the presence of MT is left to the requirements, ie. it is not
