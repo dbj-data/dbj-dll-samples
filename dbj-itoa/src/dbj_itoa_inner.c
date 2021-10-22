@@ -15,13 +15,9 @@ All this library assumes:
 
 ******************************************************************************/
 
-#include <stdlib.h>
-#include <memory.h>
-#include <limits.h>
-#include <stdio.h>
-#include <math.h>
+#include "dbj_itoa_inner.h"
 
-#include "dbj_itoa.h"
+#include <string.h> // memcpy
 
 #define ATOI_TAB_SZ 10000UL
 #define ATOI_TAB_SZ_LOG 4UL
@@ -1120,7 +1116,7 @@ unsigned int lllog_10(unsigned long long aLL)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-char *ustoa(char *aBuf, unsigned short aShort)
+char *ustoa(char aBuf[static SAFE_BUF_LEN], unsigned short aShort)
 {
 	unsigned short tmpShort = (aShort > 9999) ? (aShort / 10) : aShort;
 
@@ -1145,7 +1141,7 @@ char *ustoa(char *aBuf, unsigned short aShort)
 	return aBuf;
 };
 
-char *stoa(char *aBuf, short aShort)
+char *stoa(char aBuf[static SAFE_BUF_LEN], short aShort)
 {
 	if (aShort < 0)
 	{
@@ -1181,7 +1177,7 @@ static void uitoa_core(char *targetPtr, unsigned int anInt)
 } /* uitoa_core */
 
 // The numbers are processed by groups of four digits.
-static char *uitoa_general(char *aBuf, unsigned int anInt)
+static char *uitoa_general(char aBuf[static SAFE_BUF_LEN], unsigned int anInt)
 {
 	/* Points after the last digit of the number. */
 	aBuf += ilog_10(anInt);
@@ -1192,7 +1188,7 @@ static char *uitoa_general(char *aBuf, unsigned int anInt)
 	return aBuf;
 } /* uitoa_general */
 
-char *uitoa(char *aBuf, unsigned int anInt)
+char *uitoa(char aBuf[static SAFE_BUF_LEN], unsigned int anInt)
 {
 	const char *src = cstItoa + ATOI_TAB_SZ_LOG * anInt;
 	switch (anInt)
@@ -1211,7 +1207,7 @@ char *uitoa(char *aBuf, unsigned int anInt)
 	return uitoa_general(aBuf, anInt);
 };
 
-static inline char *uitoa2_core(char *aBuf, unsigned int anInt)
+static inline char *uitoa2_core(char aBuf[static SAFE_BUF_LEN], unsigned int anInt)
 {
 	const char *src = cstItoa + ATOI_TAB_SZ_LOG * anInt;
 	switch (anInt)
@@ -1228,7 +1224,7 @@ static inline char *uitoa2_core(char *aBuf, unsigned int anInt)
 	return aBuf;
 };
 
-static char *uitoa2_general(char *aBuf, unsigned int anInt)
+static char *uitoa2_general(char aBuf[static SAFE_BUF_LEN], unsigned int anInt)
 {
 	unsigned int tmpInt = anInt / 10000;
 	if (anInt < 100000000)
@@ -1240,7 +1236,7 @@ static char *uitoa2_general(char *aBuf, unsigned int anInt)
 	return aBuf + 4;
 };
 
-char *uitoa2(char *aBuf, unsigned int anInt)
+char *uitoa2(char aBuf[static SAFE_BUF_LEN], unsigned int anInt)
 {
 	const char *src = cstItoa + ATOI_TAB_SZ_LOG * anInt;
 	switch (anInt)
@@ -1261,7 +1257,7 @@ char *uitoa2(char *aBuf, unsigned int anInt)
 	return aBuf;
 };
 
-char *dbj_itoa(char *aBuf, int anInt)
+char *itoa_dbj(char aBuf[static SAFE_BUF_LEN], int anInt)
 {
 	if (anInt < 0)
 	{
@@ -1274,7 +1270,7 @@ char *dbj_itoa(char *aBuf, int anInt)
 /* The numbers are processed by groups of four digits.
 See http://www.gelato.unsw.edu.au/lxr/source/lib/div64.c
 Bernardo Innocenti */
-static char *ulltoa_general(char *aBuf, unsigned long long aLL)
+static char *ulltoa_general(char aBuf[static SAFE_BUF_LEN], unsigned long long aLL)
 {
 	/* Points after the last digit of the number. */
 	aBuf += lllog_10(aLL);
@@ -1303,7 +1299,7 @@ static char *ulltoa_general(char *aBuf, unsigned long long aLL)
 	return aBuf;
 } /* ulltoa_general */
 
-char *ulltoa(char *aBuf, unsigned long long aLL)
+char *ulltoa(char aBuf[static SAFE_BUF_LEN], unsigned long long aLL)
 {
 	const char *src = cstItoa + ATOI_TAB_SZ_LOG * aLL;
 	switch (aLL)
@@ -1322,7 +1318,7 @@ char *ulltoa(char *aBuf, unsigned long long aLL)
 	return ulltoa_general(aBuf, aLL);
 };
 
-static inline char *ulltoa2_core(char *aBuf, unsigned long long aLL)
+static inline char *ulltoa2_core(char aBuf[static SAFE_BUF_LEN], unsigned long long aLL)
 {
 	const char *src = cstItoa + ATOI_TAB_SZ_LOG * aLL;
 	switch (aLL)
@@ -1339,7 +1335,7 @@ static inline char *ulltoa2_core(char *aBuf, unsigned long long aLL)
 	return aBuf;
 };
 
-static char *ulltoa2_general(char *aBuf, unsigned long long aLL)
+static char *ulltoa2_general(char aBuf[static SAFE_BUF_LEN], unsigned long long aLL)
 {
 	unsigned long long tmpLL = aLL / 10000;
 	if (aLL < 100000000)
@@ -1351,7 +1347,7 @@ static char *ulltoa2_general(char *aBuf, unsigned long long aLL)
 	return aBuf + 4;
 };
 
-char *ulltoa2(char *aBuf, unsigned long long aLL)
+char *ulltoa2(char aBuf[static SAFE_BUF_LEN], unsigned long long aLL)
 {
 	const char *src = cstItoa + ATOI_TAB_SZ_LOG * aLL;
 	switch (aLL)
@@ -1372,7 +1368,7 @@ char *ulltoa2(char *aBuf, unsigned long long aLL)
 	return aBuf;
 };
 
-char *ulltoa3(char *aBuf, unsigned long long aLL)
+char *ulltoa3(char aBuf[static SAFE_BUF_LEN], unsigned long long aLL)
 {
 	if (aLL < ATOI_TAB_SZ_LOG)
 	{
@@ -1386,7 +1382,7 @@ Because of ldiv, compile this way:
 -lm -save-temps -std=c99
 */
 
-char *ulltoa4(char *aBuf, unsigned long long aLL)
+char *ulltoa4(char aBuf[static SAFE_BUF_LEN], unsigned long long aLL)
 {
 	static const size_t szBuf = LLONG_DIGITS + 1;
 	char tmpBuf[szBuf];
@@ -1428,7 +1424,7 @@ char *ulltoa4(char *aBuf, unsigned long long aLL)
 	return aBuf;
 };
 
-char *lltoa(char *aBuf, long long aLL)
+char *lltoa(char aBuf[static SAFE_BUF_LEN], long long aLL)
 {
 	if (aLL < 0)
 	{
@@ -1440,11 +1436,11 @@ char *lltoa(char *aBuf, long long aLL)
 
 /// The goal is to print as quicky as possible an floating-point number.
 /// There is no possibility of any formatting.
-char *dtoa(char *aBuf, double aD)
+char *dtoa(char aBuf[static SAFE_BUF_LEN], double aD)
 {
 	double tmpTrunc = trunc(aD);
 	int tmpTruncInt = (int)tmpTrunc;
-	char *tmpRes = dbj_itoa(aBuf, tmpTruncInt);
+	char *tmpRes = itoa_dbj(aBuf, tmpTruncInt);
 	*tmpRes++ = '.';
 
 	static const int biggestPowerOfTen = 1000000; // = pow( 10, LONG_DIGITS );

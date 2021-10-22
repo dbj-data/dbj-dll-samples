@@ -2,14 +2,16 @@
 /* --------------------------------------------------------------------------------- 
 (c) 2021 by dbj@dbj.org https://license_dbj
 */
-#include "src/decimal_from.h" // this is not the public header!
+#include "src/decimal_from.h"   // this is not the public header!
+#include "src/dbj_itoa_inner.h" // this is not the public header!
+
 #include "../dbj-component.h"
-#include "dbj-itoa.h"
+#include "dbj-itoa.h" // dll interface
 
 #include <string.h>
 
 // dbj_component_version() generated here
-DBJ_COMPONENT_VERSION_IMPLEMENTATION(0, 1, 0, "dbj itoa various forms");
+DBJ_COMPONENT_VERSION_IMPLEMENTATION(0, 2, 0, "dbj itoa various forms");
 /* --------------------------------------------------------------------------------- */
 // dbj_component_can_unload_now() is part of dbj-component definition
 // one usualy used the macro DBJ_COMPONENT_UNLOADER_IMPLEMENTATION
@@ -40,7 +42,33 @@ static dbj_itoa implementation_ = {
     // here connect function pointers of the public interface
     // to the private implementations
     // thus, both sides have to exhibit matching signatures
-    .decimal_from = dbj_decimal_from
+    .decimal_from = dbj_decimal_from,
+
+    .ilog_10 = ilog_10,
+
+    .lllog_10 = lllog_10,
+
+    .ustoa = ustoa,
+
+    .stoa = stoa,
+
+    .uitoa = uitoa,
+
+    .uitoa2 = uitoa2,
+
+    .dbj_itoa = itoa_dbj,
+
+    .ulltoa = ulltoa,
+
+    .ulltoa2 = ulltoa2,
+
+    .ulltoa3 = ulltoa3,
+
+    .ulltoa4 = ulltoa4,
+
+    .lltoa = lltoa,
+
+    .dtoa = dtoa
     // eof implementation_
 };
 

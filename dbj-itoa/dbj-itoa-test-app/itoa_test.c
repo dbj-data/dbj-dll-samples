@@ -4,16 +4,22 @@
 #include <limits.h>
 #include <math.h>
 
-#include "dbj_itoa.h"
+#include "../dbj-itoa.h"
+#include "../../dbj-light-loader.h"
+
+#ifndef LONG_DIGITS
+#define LONG_DIGITS 10
+#define LLONG_DIGITS 20
+#endif // ! LONG_DIGITS
 
 static void full_test_i(const char *msg, char *(func)(char *, unsigned int), int nbLoop)
 {
 	int nbDigs;
-	printf("Integer: %s\n", msg);
+	DBG_PRINT("Testing conversion of int's, using: %s\n", msg);
 
 	for (nbDigs = 1; nbDigs <= LONG_DIGITS; ++nbDigs)
 	{
-		clock_t timBeg = clock();
+		// clock_t timBeg = clock();
 
 		/* All the number will have the same number of digits. */
 		double numBeg = pow(10.0, nbDigs - 1);
@@ -33,19 +39,19 @@ static void full_test_i(const char *msg, char *(func)(char *, unsigned int), int
 			unsigned int n2;
 			if (1 != sscanf(tmpBuf, "%u", &n2))
 			{
-				printf("Cannot sscanf\n");
+				DBG_PRINT("Cannot sscanf\n");
 				return;
 			};
 			if (n2 != numData)
 			{
-				printf("Err: Buf=[%s] numData=%u n2=%u.\n", tmpBuf, numData, n2);
+				DBG_PRINT("Err: Buf=[%s] numData=%u n2=%u.\n", tmpBuf, numData, n2);
 				return;
 			};
 			numBeg *= 1.1;
 		} while ((numBeg < numEnd) && (numBeg < (double)LONG_MAX));
 
-		clock_t timEnd = clock();
-		printf("NbDigits=%02d time=%8ld\n", nbDigs, (timEnd - timBeg) / 1000);
+		// clock_t timEnd = clock();
+		DBG_PRINT("Finished OK for number of digits: %02d \n", nbDigs);
 	}
 };
 
@@ -56,11 +62,11 @@ static void full_test_i(const char *msg, char *(func)(char *, unsigned int), int
 static void full_test_ll(const char *msg, char *(func)(char *, unsigned long long), int nbLoop)
 {
 	int nbDigs;
-	printf("LongLong: %s\n", msg);
+	DBG_PRINT("Testing conversions of LongLong, using : %s\n", msg);
 
 	for (nbDigs = 1; nbDigs <= LLONG_DIGITS; ++nbDigs)
 	{
-		clock_t timBeg = clock();
+		// clock_t timBeg = clock();
 
 		/* All the number will have the same number of digits. */
 		double numBeg = pow(10.0, nbDigs - 1);
@@ -80,34 +86,34 @@ static void full_test_ll(const char *msg, char *(func)(char *, unsigned long lon
 			unsigned long long n2;
 			if (1 != sscanf(tmpBuf, "%llu", &n2))
 			{
-				printf("Cannot sscanf\n");
+				DBG_PRINT("Cannot sscanf\n");
 			};
 			if (n2 != numData)
 			{
-				printf("Err: Buf=[%s] N=%lld, n2=%llu.\n", tmpBuf, numData, n2);
+				DBG_PRINT("Err: Buf=[%s] N=%lld, n2=%llu.\n", tmpBuf, numData, n2);
 				abort();
 			};
 			numBeg *= 1.01;
 		} while ((numBeg < numEnd) && (numBeg < (double)LLONG_MAX));
 
-		clock_t timEnd = clock();
-		printf("NbDigits=%02d time=%8ld\n", nbDigs, (timEnd - timBeg) / 1000);
+		// clock_t timEnd = clock();
+		DBG_PRINT("Finished OK for number of digits: %02d \n", nbDigs);
 	}
 };
 
-static char *sprintf_i(char *ptrBuf, unsigned int uInt)
-{
-	return ptrBuf + sprintf(ptrBuf, "%u", uInt);
-};
+// static char *sprintf_i(char *ptrBuf, unsigned int uInt)
+// {
+// 	return ptrBuf + sprintf(ptrBuf, "%u", uInt);
+// };
 
-static char *sprintf_ll(char *ptrBuf, unsigned long long uLL)
-{
-	return ptrBuf + sprintf(ptrBuf, "%llu", uLL);
-};
+// static char *sprintf_ll(char *ptrBuf, unsigned long long uLL)
+// {
+// 	return ptrBuf + sprintf(ptrBuf, "%llu", uLL);
+// };
 
-static char *(*dummy)(char *, unsigned long long) = sprintf_ll;
+// static char *(*dummy)(char *, unsigned long long) = sprintf_ll;
 
-static void test(void)
+static void test_lllog_10(dbj_itoa *interface)
 {
 	unsigned long long i = 1, s;
 	int nbDigs = 1;
@@ -115,14 +121,14 @@ static void test(void)
 	{
 		s = 10 * i;
 		unsigned long long j;
-		printf("i=%llu d=%d\n", i, nbDigs);
+		DBG_PRINT("i=%llu d=%d\n", i, nbDigs);
 		fflush(stdout);
 		for (j = i; j < s; j += 100000000000ULL)
 		{
-			int n = lllog_10(j);
+			int n = interface->lllog_10(j);
 			if (n != nbDigs)
 			{
-				printf("BAD i=%llu d=%d n=%d\n", j, nbDigs, n);
+				DBG_PRINT("BAD i=%llu d=%d n=%d\n", j, nbDigs, n);
 				break;
 			};
 		}
@@ -130,52 +136,18 @@ static void test(void)
 	};
 };
 
-int main(int argC, const char **argV)
+int itoa_test(dbj_itoa *interface)
 {
-	if (argC < 2)
-	{
-		printf("\n%s\nProvide one of the three commands : x|i|l\n", argV[0]);
-		printf("Commands i or l do require no of iterations as a number parameter : i|l [0-9]+\n");
-		printf("Commands are not case sensitive\n");
-		return EXIT_FAILURE;
-	};
+	int nb = 0xF;
 
-	int nb = argC > 2 ? atoi(argV[2]) : 0;
-
-	if (nb < 1)
-	{
-		printf("\n%s\nProvide number of iterations as parameter to i or l commands: i|l [0-9]+\n", argV[0]);
-		return EXIT_FAILURE;
-	}
-
-	switch (argV[1][0])
-	{
-	case 'x':
-	case 'X':
-		test();
-		break;
-	case 'i':
-	case 'I':
-	{
-		full_test_i("sprintf_i", sprintf_i, nb);
-		full_test_i("uitoa2", uitoa2, nb);
-		full_test_i("uitoa", uitoa, nb);
-	};
-	break;
-	case 'l':
-	case 'L':
-	{
-		full_test_ll("sprintf_ll", sprintf_ll, nb);
-		full_test_ll("ulltoa", ulltoa, nb);
-		full_test_ll("ulltoa2", ulltoa2, nb);
-		full_test_ll("ulltoa3", ulltoa3, nb);
-		full_test_ll("ulltoa4", ulltoa4, nb);
-	};
-	break;
-	default:
-		printf("Bad type selector:%c\n", argV[1][0]);
-		return EXIT_FAILURE;
-	};
-	printf("Test OK\n");
+	test_lllog_10(interface);
+	// full_test_ll("sprintf_ll", sprintf_ll, nb);
+	// full_test_i("sprintf_i", sprintf_i, nb);
+	full_test_i("uitoa2", interface->uitoa2, nb);
+	full_test_i("uitoa", interface->uitoa, nb);
+	full_test_ll("ulltoa", interface->ulltoa, nb);
+	full_test_ll("ulltoa2", interface->ulltoa2, nb);
+	full_test_ll("ulltoa3", interface->ulltoa3, nb);
+	full_test_ll("ulltoa4", interface->ulltoa4, nb);
 	return EXIT_SUCCESS;
 }

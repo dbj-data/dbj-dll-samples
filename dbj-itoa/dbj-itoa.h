@@ -9,7 +9,8 @@
 
 enum
 {
-    dbj_itoa_min_buffer_count = 0xF
+    dbj_itoa_min_buffer_count = 0xF,
+    SAFE_BUF_LEN = 0xF // this is from inner header
 };
 
 typedef struct dbj_itoa_ dbj_itoa;
@@ -18,6 +19,32 @@ struct dbj_itoa_
     // right now there is no error signaling whatsoever
     // roadmap is to return NULL on error
     char const *(*decimal_from)(long /* input */, const unsigned, char[]);
+
+    unsigned int (*ilog_10)(unsigned int);
+
+    unsigned int (*lllog_10)(unsigned long long);
+
+    char *(*ustoa)(char[static SAFE_BUF_LEN], unsigned short);
+
+    char *(*stoa)(char[static SAFE_BUF_LEN], short);
+
+    char *(*uitoa)(char[static SAFE_BUF_LEN], unsigned int);
+
+    char *(*uitoa2)(char[static SAFE_BUF_LEN], unsigned int);
+
+    char *(*dbj_itoa)(char[static SAFE_BUF_LEN], int);
+
+    char *(*ulltoa)(char[static SAFE_BUF_LEN], unsigned long long);
+
+    char *(*ulltoa2)(char[static SAFE_BUF_LEN], unsigned long long);
+
+    char *(*ulltoa3)(char[static SAFE_BUF_LEN], unsigned long long);
+
+    char *(*ulltoa4)(char[static SAFE_BUF_LEN], unsigned long long);
+
+    char *(*lltoa)(char[static SAFE_BUF_LEN], long long);
+
+    char *(*dtoa)(char[static SAFE_BUF_LEN], double);
 };
 
 typedef dbj_itoa *(*dbj_itoa_factory_fp)(void);

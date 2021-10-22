@@ -19,7 +19,7 @@ set "build=..\Build"
 
 @rem /Zi -- debug builds + pdb file -- remove this switch for release builds
 @rem /TC -- threat all as C
-clang-cl %sourcefilename%.c /nologo /I "f:\machine_wide" /MDd /D_DEBUG /Zi /TC /W3 /Fo%build%\ /Fe%build%\%sourcebasename%.dll /link /dll /def:%sourcefilename%.def
+clang-cl %sourcefilename%.c src\dbj_itoa_inner.c /nologo /I "f:\machine_wide" /MDd /D_DEBUG /Zi /TC /W3 /Fo%build%\ /Fe%build%\%sourcebasename%.dll /link /dll /def:%sourcefilename%.def
 
 @echo.
 @echo Done building: %build%\%sourcebasename%.dll

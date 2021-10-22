@@ -96,55 +96,6 @@ extern "C"
 		return buffer;
 	}
 
-// #define DECIMAL_FROM_TEST_
-#ifdef DECIMAL_FROM_TEST_
-#include <stdio.h>
-#include <limits.h> // std::numeric_limits
-
-#define SX(F_, X_) printf("\n%s : " F_, (#X_), (X_))
-
-	int test_decimal_from(const int argc, char *argv[])
-	{
-		printf("\n%s", "Reversals");
-		{
-			char specimen[] = "0123456789";
-			printf("\nBefore:\t%s", specimen);
-			char *left = specimen;
-			char *right = specimen + 10;
-			DBJ_REVERSE(left, right);
-			printf("\nAfter:\t%s", specimen);
-		}
-
-		{
-			int specimen[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-			printf("\nBefore:");
-			for (int k = 0; k < 10; ++k)
-				printf("%3d", specimen[k]);
-
-			int *left = specimen;
-			int *right = specimen + 10;
-
-			DBJ_REVERSE(left, right);
-
-			printf("\nAfter:");
-			for (int k = 0; k < 10; ++k)
-				printf("%3d", specimen[k]);
-		}
-
-		char spec[BUFSIZ] = {0};
-
-		printf("\n%s", "decimal_from()");
-
-		SX("'%s'", decimal_from(LONG_MAX, spec));
-		SX("'%s'", decimal_from(LONG_MIN, spec));
-		SX("'%s'", decimal_from(0, spec));
-		SX("'%s'", decimal_from(+42L, spec));
-		SX("'%s'", decimal_from(-0L, spec));
-
-		return 42;
-	}
-#endif // DECIMAL_FROM_TEST_
-
 #ifdef __cplusplus
 } // extern "C"
 #endif
