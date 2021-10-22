@@ -42,7 +42,7 @@ extern "C"
     //
     // EXPORTS
     // dbj_component_can_unload_now    PRIVATE
-    // dbj_component_factory           PRIVATE
+    // interface_factory           PRIVATE
     // dbj_component_version           PRIVATE
     //
     // functions in DLL are exported by name
@@ -60,13 +60,13 @@ extern "C"
     // factory function for this component is implemented
     // in the C file as:
     //
-    // struct dbj_strong *dbj_component_factory(void)
+    // struct dbj_strong *interface_factory(void)
     // {
     //     return &componenet_implementation_;
     // }
     //
     // Of the three fuinctions from the def file,
-    // only the "dbj_component_factory" has
+    // only the "interface_factory" has
     // function pointer unique per each component
     // its declaration is the function pointer
     // and for this component it is:

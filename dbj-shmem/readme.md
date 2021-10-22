@@ -74,7 +74,7 @@ int main(int argc, char **argv)
       /* dll file name */
       "dbj-shmem.dll", 
       /* 
-      method name, always: 'dbj_component_factory' 
+      method name, always: 'interface_factory' 
       defined in dbj-component.h
       */
       DBJCS_FACTORYNAME, 

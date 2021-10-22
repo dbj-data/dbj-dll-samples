@@ -5,7 +5,7 @@
 @rem member of machine_wide repo that contains all the "machine wide"
 @rem common stuff used by all the projects; on this machine from f:/machine_wide
 @rem
-@REM F:\machine_wide, git remote -v yields:
+@REM D:\machine_wide, git remote -v yields:
 @REM
 @REM origin  https://github.com/dbj-data/machine_wide.git (fetch)
 @REM origin  https://github.com/dbj-data/machine_wide.git (push)
@@ -23,7 +23,7 @@ set "sourcefilename=%sourcebasename%"
 set "build=..\Build"
 @md %build% 2>nul
 
-@set "INCLUDE=F:\machine_wide;%INCLUDE%"
+@set "INCLUDE=D:\machine_wide;%INCLUDE%"
 
 @rem /Zi -- debug builds + pdb file -- remove this switch for release builds
 @rem /TC -- threat all as C

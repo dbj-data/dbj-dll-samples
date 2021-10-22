@@ -50,16 +50,6 @@ otherwise we will use dbj_capi default loader, based on a stderr redirection to 
 typedef struct dbjcs_loader_state dbjcs_loader_state;
 
 dbjcs_loader_state dbjloader_dll_unload(dbjcs_loader_state state);
-/* 
-unload all the dll's on app exit
-*/
-__attribute__((destructor)) void dbj_loader_descriptors_hash_destructor(void)
-{
-	for (int j = 0; j < stbds_hmlen(state_descriptors_hash); ++j)
-		dbjloader_dll_unload(state_descriptors_hash[j]);
-
-	stbds_hmfree(state_descriptors_hash);
-}
 
 /*
  one loader state per one dll
@@ -87,6 +77,16 @@ dbjcs_loader_state dbjloader_new_state_struct_(void)
 /* here is the hash table to hold state descriptors    */
 static struct dbjcs_loader_state *state_descriptors_hash = 0;
 
+/* 
+unload all the dll's on app exit
+*/
+__attribute__((destructor)) void dbj_loader_descriptors_hash_destructor(void)
+{
+	for (int j = 0; j < stbds_hmlen(state_descriptors_hash); ++j)
+		dbjloader_dll_unload(state_descriptors_hash[j]);
+
+	stbds_hmfree(state_descriptors_hash);
+}
 /// --------------------------------------------------------------
 
 void dbj_loader_add_to_hash(struct dbjcs_loader_state loader_descriptor_)
@@ -255,7 +255,7 @@ void *dbjloader_get_function(dbjcs_loader_state *state, char const fun_name_[sta
 /// each dbj components must have one factory method
 // with always the same name
 #ifndef DBJCS_FACTORYNAME
-#define DBJCS_FACTORYNAME "dbj_component_factory"
+#define DBJCS_FACTORYNAME "interface_factory"
 #endif // ! DBJCS_FACTORYNAME
 /*
 RFP = Required Function FP of the function fromm the DLL

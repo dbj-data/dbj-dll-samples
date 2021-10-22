@@ -9,9 +9,12 @@
 
 enum
 {
-    dbj_itoa_min_buffer_count = 0xF,
-    SAFE_BUF_LEN = 0xF // this is from inner header
+    dbj_itoa_min_buffer_count = 0xF
 };
+
+#ifndef SAFE_BUF_LEN
+#define SAFE_BUF_LEN 0xF
+#endif // ! SAFE_BUF_LEN
 
 typedef struct dbj_itoa_ dbj_itoa;
 struct dbj_itoa_
@@ -53,7 +56,7 @@ typedef dbj_itoa *(*dbj_itoa_factory_fp)(void);
 //
 // EXPORTS
 // dbj_component_can_unload_now    PRIVATE
-// dbj_component_factory           PRIVATE
+// interface_factory           PRIVATE
 // dbj_component_version           PRIVATE
 //
 // functions in DLL are exported by name
@@ -71,12 +74,12 @@ typedef dbj_itoa *(*dbj_itoa_factory_fp)(void);
 // factory function for this component is implemented
 // in the C file as:
 //
-// struct dbj_strong *dbj_component_factory(void)
+// struct dbj_strong *interface_factory(void)
 // {
 //     return &componenet_implementation_;
 // }
 //
 // Of the three fuinctions from the def file,
-// only the "dbj_component_factory" has
+// only the "interface_factory" has
 // function pointer unique per each component
 // its declaration is the function pointer

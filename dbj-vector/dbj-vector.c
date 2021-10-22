@@ -24,13 +24,12 @@ static struct dbj_vector_component dbj_vector_component_interface_implementation
     .at = vector_at,
     .swap = vector_swap,
     .clear = vector_clear,
-    .erase = vector_erase
-    };
+    .erase = vector_erase};
 /*
 single factory function has a mandatory name and returns
 a pointer to the component interface
 */
-struct dbj_vector_component *dbj_component_factory(void)
+struct dbj_vector_component *interface_factory(void)
 {
     return &dbj_vector_component_interface_implementation_;
 }

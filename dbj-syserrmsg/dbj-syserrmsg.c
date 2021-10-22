@@ -3,9 +3,15 @@
 
 DBJ_COMPONENT_VERSION_IMPLEMENTATION(0, 1, 0, "dbj syserrmsg component");
 /* --------------------------------------------------------------------------------- */
-DBJ_COMPONENT_UNLOADER_IMPLEMENTATION;
+DBJ_COMPONENT_UNLOADER_IMPLEMENTATION
 /* --------------------------------------------------------------------------------- */
 #include <windows.h>
+
+#ifndef DBJ_ASSERT
+#include <crtdbg.h>
+#define DBJ_ASSERT _ASSERTE
+#endif // ! DBJ_ASSERT
+
 #include <stdio.h>
 
 #include <lmerr.h>
@@ -126,7 +132,7 @@ static struct component_syserrmsg interface_implementation_ = {
     .also_to_stderr = also_to_stderr_implementation,
     .error_message = error_message_implementation_};
 
-struct component_syserrmsg *dbj_component_factory(void)
+struct component_syserrmsg *interface_factory(void)
 {
     return &interface_implementation_;
 }

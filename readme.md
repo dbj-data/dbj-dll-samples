@@ -32,7 +32,7 @@ If some "feature" is missing we can always pull the card of simplicity as an exc
 ```
 EXPORTS
 dbj_component_can_unload_now      PRIVATE
-dbj_component_factory             PRIVATE
+interface_factory             PRIVATE
 dbj_component_version             PRIVATE
 ```
 - thus each DBJ Component exports all of the three functions above
@@ -43,7 +43,7 @@ dbj_component_version             PRIVATE
 #define COMPONENT_A_DLL_NAME "component_a.dll"
 ```
  - The component factory function name is always the name
-     - `"dbj_component_factory"`
+     - `"interface_factory"`
      - that is the name (as exported) not the full function signature of the factory function
 - that is enough information to runtime load the dll (aka component) and get to the factory function `void *`
   - that is not enough to execute it yet
@@ -52,7 +52,7 @@ dbj_component_version             PRIVATE
 // from component_a.h
 // factory function declaration is not required
 // it is just implied
-// struct component_a * dbj_component_factory(void);
+// struct component_a * interface_factory(void);
 ``` 
   - that interface is a struct and is the only thing required to de declared in the component header for users to use.
 ```cpp
@@ -112,7 +112,7 @@ Let us call that `get42` :
 - dll name
   - `"component_a.dll"`
 - factory function name; always the same
-  - `"dbj_component_factory"`
+  - `"interface_factory"`
 - factory function pointer of the exact component
   - `component_a_factory_fp` declared in `"component_a.h"`
   - the callback where user will do the job
@@ -122,7 +122,7 @@ void use_component_a ( component_a_factory_fp factory_) ;
  // execute the load and call the callback
 DBJCS_CALL( 
   "component_a.dll",
- "dbj_component_factory", 
+ "interface_factory", 
  component_a_factory_fp,
   use_component_a
  ) ;

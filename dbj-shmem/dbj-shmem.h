@@ -25,7 +25,7 @@ extern "C"
     };
 
     //
-    // FP of the dbj_component_factory
+    // FP of the interface_factory
     // for this component
     typedef struct component_shmem *(*component_shmem_factory_fp)(void);
 

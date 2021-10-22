@@ -10,7 +10,7 @@ same def for all dll's:
 
 EXPORTS
 dbj_component_can_unload_now    PRIVATE
-dbj_component_factory           PRIVATE
+interface_factory           PRIVATE
 dbj_component_version           PRIVATE
 
 */
@@ -91,7 +91,7 @@ same def for all component dll's:
 
 EXPORTS
 dbj_component_can_unload_now    PRIVATE
-dbj_component_factory           PRIVATE
+interface_factory           PRIVATE
 dbj_component_version           PRIVATE
 
 each is exported in a def file for each component
@@ -100,7 +100,7 @@ regardless of the return type or arguments
 
 */
 #define DBJCS_CAN_UNLOAD_NAME "dbj_component_can_unload_now"
-#define DBJCS_FACTORYNAME "dbj_component_factory"
+#define DBJCS_FACTORYNAME "interface_factory"
 #define DBJCS_SEMVER_NAME "dbj_component_version"
 
 /*

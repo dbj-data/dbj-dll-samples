@@ -135,9 +135,9 @@ static struct component_shmem
             .set_value = set_value_method};
 
 // each dbj component must have exported function
-// with the name "dbj_component_factory"
+// with the name "interface_factory"
 // see the def file in this folder
-struct component_shmem *dbj_component_factory(void)
+struct component_shmem *interface_factory(void)
 {
     return &componenet_implementation_;
 }

@@ -18,7 +18,7 @@
 #include <assert.h>
 #include <stdio.h>
 /* ----------------------------------------------------------------------------------------------- */
-// FP of the dbj_component_factory
+// FP of the interface_factory
 // is different for each component
 static inline void get_version_cb(DBJ_COMPONENT_SEMVER_FP get_version)
 {

@@ -32,10 +32,11 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-	// #define LONG_DIGITS 10
-	// #define LLONG_DIGITS 20
-	// defined in dbj-itoa.h included before
-	// enum { SAFE_BUF_LEN = 0xF } ;
+// #define LONG_DIGITS 10
+// #define LLONG_DIGITS 20
+#ifndef SAFE_BUF_LEN
+#define SAFE_BUF_LEN 0xF
+#endif // ! SAFE_BUF_LEN
 
 	unsigned int ilog_10(unsigned int);
 

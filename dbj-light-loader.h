@@ -47,11 +47,11 @@ These are well known and documented names, on the level of the DBJ CMS
 
 EXPORTS
 dbj_component_can_unload_now    PRIVATE
-dbj_component_factory           PRIVATE
+interface_factory           PRIVATE
 dbj_component_version           PRIVATE
 */
 #define DBJCS_CAN_UNLOAD_NAME "dbj_component_can_unload_now"
-#define DBJCS_FACTORYNAME "dbj_component_factory"
+#define DBJCS_FACTORYNAME "interface_factory"
 #define DBJCS_SEMVER_NAME "dbj_component_version"
 
 struct dbj_component_version_

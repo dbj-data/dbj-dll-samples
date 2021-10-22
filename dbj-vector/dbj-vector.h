@@ -56,7 +56,7 @@ extern "C"
 	};
 
 	//
-	// FP of the dbj_component_factory
+	// FP of the interface_factory
 	// for this component
 	typedef struct dbj_vector_component *(*dbj_vector_component_fp)(void);
 

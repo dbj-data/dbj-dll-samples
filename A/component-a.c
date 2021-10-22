@@ -43,9 +43,9 @@ static int get42implementation(struct component_a *self_)
 static struct component_a componenet_implementation_ = {.data_ = 42, .get42 = get42implementation, .connection_string = connection_string_};
 
 // each dbj component must have exported function
-// with the name "dbj_component_factory"
+// with the name "interface_factory"
 // see the def file in this folder
-struct component_a *dbj_component_factory(void)
+struct component_a *interface_factory(void)
 {
     return &componenet_implementation_;
 }

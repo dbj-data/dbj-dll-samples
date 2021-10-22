@@ -122,9 +122,9 @@ static struct dbj_string_tools component_implementation_ = {
     .tokenizer = tokenzier};
 
 // each dbj component must have exported factory function
-// with the name "dbj_component_factory"
+// with the name "interface_factory"
 // see the def file in this folder
-struct dbj_string_tools *dbj_component_factory(void)
+struct dbj_string_tools *interface_factory(void)
 {
     return &component_implementation_;
 }

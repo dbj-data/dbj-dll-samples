@@ -74,9 +74,9 @@ static dbj_itoa implementation_ = {
 
 // each dbj dll aka "component"
 // must have exported factory function
-// with the name "dbj_component_factory"
+// with the name "interface_factory"
 // see the def file in this folder
-dbj_itoa *dbj_component_factory(void)
+dbj_itoa *interface_factory(void)
 {
     return &implementation_;
 }

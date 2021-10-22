@@ -21,16 +21,16 @@ int main(int argc, char **argv)
     // specific factory for this component only
     // note: factory function name is always the same
     // return type is always different
-    dbj_itoa_factory_fp factory_fun =
+    dbj_itoa_factory_fp interface_factory =
         (dbj_itoa_factory_fp)dbj_dll_get_function(&dll_handle_, DBJCS_FACTORYNAME);
 
-    if (!factory_fun)
+    if (!interface_factory)
     {
         return EXIT_FAILURE;
     }
 
-    test_decimal_from(factory_fun());
-    itoa_test(factory_fun());
+    test_decimal_from(interface_factory());
+    itoa_test(interface_factory());
 
     return dbj_light_unload_dll(dll_handle_);
 }

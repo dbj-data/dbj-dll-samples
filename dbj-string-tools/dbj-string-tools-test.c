@@ -91,15 +91,15 @@ int main(int argc, char **argv)
 
     // specific factory for this component only
     // note: factory function name is always the same
-    dbj_string_utils_factory_fp factory_fun =
+    dbj_string_utils_factory_fp interface_factory =
         (dbj_string_utils_factory_fp)dbj_dll_get_function(&dll_handle_, DBJCS_FACTORYNAME);
 
-    if (!factory_fun)
+    if (!interface_factory)
     {
         return EXIT_FAILURE;
     }
 
-    dbj_tokenizer_test(factory_fun());
+    dbj_tokenizer_test(interface_factory());
 
     return dbj_light_unload_dll(dll_handle_);
 }

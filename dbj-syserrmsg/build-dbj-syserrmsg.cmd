@@ -15,9 +15,6 @@ set "build=..\Build"
 
 @set "INCLUDE=d:\machine_wide;%INCLUDE%"
 
-@echo Include: %INCLUDE%
-@pause
-
 @rem /Zi -- debug builds + pdb file
 @rem /TC -- threat all as C
 clang-cl %sourcefilename%.c /nologo /I "d:\machine_wide" /MDd /D_DEBUG /Zi /TC /W3 /Fo%build%\ /Fe%build%\%sourcebasename%.dll /link /dll /def:%sourcefilename%.def
