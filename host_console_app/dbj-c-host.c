@@ -94,7 +94,7 @@ static inline void dbj_vector_component_user(dbj_vector_component_fp factory)
 static inline void syserrmsg_component_user(component_syserrmsg_factory_fp factory)
 {
   struct component_syserrmsg *imp = factory();
-  imp->also_to_stderr(true);
+  imp->also_to_stderr(false);
   dbj_string_512 msg_;
   // probe the existence of messages [0 .. 65535)
   for (int k = 2900; k < 3100; ++k)
@@ -108,11 +108,9 @@ static inline void syserrmsg_component_user(component_syserrmsg_factory_fp facto
 /* ----------------------------------------------------------------------------------------------- */
 int main(int argc, char **argv)
 {
-  DBJCS_LOADER_LOG("Starting: %s", argv[0]);
-  dbjcapi_memory_info(stderr);
 
   show_component_info(DBJ_SYSERRMSG_DLL_NAME);
-  DBJCS_CALL(DBJ_SYSERRMSG_DLL_NAME, component_syserrmsg_factory_fp, syserrmsg_component_user);
+  //  DBJCS_CALL(DBJ_SYSERRMSG_DLL_NAME, component_syserrmsg_factory_fp, syserrmsg_component_user);
 
   show_component_info(COMPONENT_FILENAME_DBJ_VECTOR);
   DBJCS_CALL(COMPONENT_FILENAME_DBJ_VECTOR, dbj_vector_component_fp, dbj_vector_component_user);
@@ -126,8 +124,17 @@ int main(int argc, char **argv)
   DBJCS_CALL(DBJ_SHMEM_DLL_NAME, component_shmem_factory_fp, shmem_component_user);
   DBJCS_CALL(DBJ_SHMEM_DLL_NAME, component_shmem_factory_fp, shmem_component_user);
 
-  DBJCS_LOADER_LOG("Ending: %s", argv[0]);
-  dbjcapi_memory_info(stderr);
-
   return 0;
+}
+/* ----------------------------------------------------------------------------------------------- */
+__attribute__((constructor)) static void show_mem_on_start(void)
+{
+  DBG_PRINT("Starting");
+  dbjcapi_memory_info();
+}
+
+__attribute__((destructor)) static void show_mem_on_exit(void)
+{
+  DBG_PRINT("Ending");
+  dbjcapi_memory_info();
 }

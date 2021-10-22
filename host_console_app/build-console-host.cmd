@@ -17,7 +17,7 @@ set "build=..\Build"
 @rem /TC -- threat all as C
 @rem /MTd -- use static debug runtime
 @rem /MDd -- use debug dll runtime
-@clang-cl %sourcebasename%.c /I "D:\machine_wide" /GR- /MTd /D_DEBUG /D_HAS_EXCEPTIONS=0 /nologo /Zi /W3 /Fo%build%\ /Fe%build%\%sourcebasename%.exe 
+@clang-cl %sourcebasename%.c /I "D:\machine_wide" /TC /GR- /MTd /D_DEBUG /D_HAS_EXCEPTIONS=0 /nologo /Zi /W3 /Fo%build%\ /Fe%build%\%sourcebasename%.exe 
 
 @echo.
 @echo Done building: %build%\%sourcebasename%.exe

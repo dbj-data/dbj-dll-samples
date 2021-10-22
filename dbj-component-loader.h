@@ -42,7 +42,8 @@ extern "C" void (*user_log_FP) (const char* file, long line, const char* , ...);
 otherwise we will use dbj_capi default loader, based on a stderr redirection to file
 */
 #ifndef DBJCS_LOADER_LOG
-#define DBJCS_LOADER_LOG(...) dbjcapi_default_log_function(__FILE__, __LINE__, __VA_ARGS__)
+// #define DBJCS_LOADER_LOG(...) dbjcapi_default_log_function(__FILE__, __LINE__, __VA_ARGS__)
+#define DBJCS_LOADER_LOG(...) DBG_PRINT(__VA_ARGS__)
 #endif // ! DBJCS_LOADER_LOG
 
 #pragma region hash table of states
