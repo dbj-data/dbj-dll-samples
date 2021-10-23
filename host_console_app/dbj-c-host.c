@@ -96,7 +96,8 @@ static inline void syserrmsg_component_user(component_syserrmsg_factory_fp facto
   struct component_syserrmsg *imp = factory();
   imp->also_to_stderr(false);
   dbj_string_512 msg_;
-  // probe the existence of messages [0 .. 65535)
+
+  // probe the existence of messages [0 .. N)
   for (int k = 2900; k < 3100; ++k)
   {
     msg_ = imp->error_message(imp, k);

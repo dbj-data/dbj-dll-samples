@@ -23,7 +23,7 @@ DBJCS_ANY_CALL(dll_name_, function_name, RFP, callback_)
 /// --------------------------------------------------------------
 
 #include <dbj_capi/cdebug.h>
-#include <dbj_capi/default_log.h>
+/// #include <dbj_capi/default_log.h>
 
 /// WARNING!
 /// requires
