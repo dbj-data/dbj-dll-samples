@@ -71,15 +71,15 @@ typedef dbj_itoa *(*dbj_itoa_ifp)(void);
 // dbj-component.h
 //
 
-// factory function for this component is implemented
-// in the C file as:
+// interface factory function for this component is implemented
+// inside the DLL as:
 //
 // struct dbj_strong *interface_factory(void)
 // {
 //     return &componenet_implementation_;
 // }
 //
-// Of the three fuinctions from the def file,
+// Of the three functions from the def file,
 // only the "interface_factory" has
 // function pointer unique per each component
-// its declaration is the function pointer
+// its declaration is its function pointer

@@ -43,19 +43,25 @@ int test_decimal_from(dbj_itoa *interface_)
     //         DBG_PRINT("%3d", specimen[k]);
     // }
 
+    // 20+ years GCC extension not in the ISO C standard; yet
     __typeof__(interface_->decimal_from) decimal_from = interface_->decimal_from;
 
     // char const *(*decimal_from)(long, const unsigned, char[]) = interface_->decimal_from;
 
-    char spec[BUFSIZ] = {0};
+    // 512 is huge
+#undef BUFSIZ
+// 0xF is quite enough
+#define BUFSIZ 0xF
+
+    char buffy[BUFSIZ] = {0};
 
     DBG_PRINT("\n%s", "decimal_from()");
 
-    SX("'%s'", decimal_from(LONG_MAX, BUFSIZ, spec));
-    SX("'%s'", decimal_from(LONG_MIN, BUFSIZ, spec));
-    SX("'%s'", decimal_from(0, BUFSIZ, spec));
-    SX("'%s'", decimal_from(+42L, BUFSIZ, spec));
-    SX("'%s'", decimal_from(-0L, BUFSIZ, spec));
+    SX("'%s'", decimal_from(LONG_MAX, BUFSIZ, buffy));
+    SX("'%s'", decimal_from(LONG_MIN, BUFSIZ, buffy));
+    SX("'%s'", decimal_from(0, BUFSIZ, buffy));
+    SX("'%s'", decimal_from(+42L, BUFSIZ, buffy));
+    SX("'%s'", decimal_from(-0L, BUFSIZ, buffy));
 
     return 42;
 }
