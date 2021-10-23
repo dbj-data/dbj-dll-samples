@@ -149,4 +149,30 @@ static inline int dbj_light_unload_dll(HINSTANCE dll_handle_)
     return EXIT_SUCCESS;
 }
 
+/*
+IFP == Interface Factory Function Pointer
+DBJ DLL interface is one struct
+DBJ DLL interface implementation is obtained through a function 
+that always has the same name and always has a different return type and no arguments
+and that return type is the struct dll has as its only interface
+each DBJ DLL header declares a function pointer to that function
+
+example: dbj_itoa.h is a header for dbj_itoa.dll
+
+interface is one struct:
+struct dbj_itoa {  ... };
+
+fp to a factory function returning pointer to its interface:
+typedef dbj_itoa *(*dbj_itoa_ifp)(void);
+
+DLL def file declares exported function ONLY by a name;
+dbj_itoa.def is the same as any other dbj dll def; you just copy the def; it is always the same
+
+EXPORTS
+dbj_component_can_unload_now    PRIVATE
+interface_factory               PRIVATE
+dbj_component_version           PRIVATE
+*/
+#define DBJ_DLL_IFP(FP_, N_, DLLHANDLE_) FP_ N_ = (FP_)dbj_dll_get_function(&DLLHANDLE_, DBJCS_FACTORYNAME)
+
 #pragma endregion // infrastructure
