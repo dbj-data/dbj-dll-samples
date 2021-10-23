@@ -111,7 +111,7 @@ static inline void *dbj_dll_get_function(HINSTANCE *dll_handle_, char const fun_
     return result;
 }
 
-static inline int dbj_light_report_version(HINSTANCE dll_handle_)
+static inline int dbj_light_version_report(HINSTANCE dll_handle_)
 {
     // using the version info is exactly the same for every DBJ Component
     DBJ_COMPONENT_SEMVER_FP get_version =

@@ -50,7 +50,7 @@ struct dbj_itoa_
     char *(*dtoa)(char[static SAFE_BUF_LEN], double);
 };
 
-typedef dbj_itoa *(*dbj_itoa_factory_fp)(void);
+typedef dbj_itoa *(*dbj_itoa_ifp)(void);
 
 // each DBJ COMPONENT has the same def file
 //

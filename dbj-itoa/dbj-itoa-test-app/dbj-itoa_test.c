@@ -6,7 +6,7 @@ extern int test_decimal_from(dbj_itoa *);
 int itoa_test(dbj_itoa *);
 
 /* 
- most if not all errors are already reported 
+ most if not all errors are already reported; in _DEBUG builds
 */
 int main(int argc, char **argv)
 {
@@ -15,16 +15,13 @@ int main(int argc, char **argv)
     if (0 == dll_handle_)
         return EXIT_FAILURE;
 
-    if (0 != dbj_light_report_version(dll_handle_))
+    if (0 != dbj_light_version_report(dll_handle_))
         return EXIT_FAILURE;
 
-    // specific factory for this component only
-    // note: factory function name is always the same
-    // return type is always different
-    // dbj_itoa_factory_fp interface_factory =
-    //     (dbj_itoa_factory_fp)dbj_dll_get_function(&dll_handle_, DBJCS_FACTORYNAME);
+    // dbj_itoa_ifp interface_factory =
+    //     (dbj_itoa_ifp)dbj_dll_get_function(&dll_handle_, DBJCS_FACTORYNAME);
 
-    DBJ_DLL_IFP(dbj_itoa_factory_fp, interface_factory, dll_handle_);
+    DBJ_DLL_IFP(dbj_itoa_ifp, interface_factory, dll_handle_);
 
     if (!interface_factory)
     {

@@ -86,7 +86,7 @@ int main(int argc, char **argv)
     if (0 == dll_handle_)
         return EXIT_FAILURE;
 
-    if (0 != dbj_light_report_version(dll_handle_))
+    if (0 != dbj_light_version_report(dll_handle_))
         return EXIT_FAILURE;
 
     // specific factory for this component only
