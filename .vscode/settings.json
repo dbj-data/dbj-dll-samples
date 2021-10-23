@@ -13,7 +13,8 @@
         "xlocbuf": "c",
         "decimal_from.h": "c",
         "dbj-light-loader.h": "c",
-        "ubench.h": "c"
+        "ubench.h": "c",
+        "dbj-string.h": "c"
     },
     "editor.formatOnSave": true
 }

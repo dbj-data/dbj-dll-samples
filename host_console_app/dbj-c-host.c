@@ -70,9 +70,9 @@ static inline void component_a_user(component_a_factory_fp factory)
 /* ----------------------------------------------------------------------------------------------- */
 // vector of equaly sized items
 // this is a callback, after its done DLL is unloaded
-static inline void dbj_vector_component_user(dbj_vector_component_fp factory)
+static inline void dbj_vector_component_user(dbj_vector_ifp factory)
 {
-  struct dbj_vector_component *imp = factory();
+  struct dbj_vector_ *imp = factory();
 
   // item_size, not vector size is the first argument
   dbj_vector_t *vec = imp->create(_countof("A"), 2);
@@ -114,7 +114,7 @@ int main(int argc, char **argv)
   //  DBJCS_CALL(DBJ_SYSERRMSG_DLL_NAME, component_syserrmsg_factory_fp, syserrmsg_component_user);
 
   show_component_info(COMPONENT_FILENAME_DBJ_VECTOR);
-  DBJCS_CALL(COMPONENT_FILENAME_DBJ_VECTOR, dbj_vector_component_fp, dbj_vector_component_user);
+  DBJCS_CALL(COMPONENT_FILENAME_DBJ_VECTOR, dbj_vector_ifp, dbj_vector_component_user);
 
   show_component_info(COMPONENT_A_DLL_NAME);
   DBJCS_CALL(COMPONENT_A_DLL_NAME, component_a_factory_fp, component_a_user);

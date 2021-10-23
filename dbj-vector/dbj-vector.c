@@ -12,7 +12,7 @@ DBJ_COMPONENT_VERSION_IMPLEMENTATION(0, 1, 0, "dbj vector component");
 // it is also generated here
 DBJ_COMPONENT_UNLOADER_IMPLEMENTATION;
 /* --------------------------------------------------------------------------------- */
-static struct dbj_vector_component dbj_vector_component_interface_implementation_ = {
+static struct dbj_vector_ dbj_vector_component_interface_implementation_ = {
     .create = create_vector,
     .destroy = destroy_vector,
     .size = vector_size,
@@ -29,7 +29,7 @@ static struct dbj_vector_component dbj_vector_component_interface_implementation
 single factory function has a mandatory name and returns
 a pointer to the component interface
 */
-struct dbj_vector_component *interface_factory(void)
+struct dbj_vector_ *interface_factory(void)
 {
     return &dbj_vector_component_interface_implementation_;
 }
