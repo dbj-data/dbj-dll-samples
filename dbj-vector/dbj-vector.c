@@ -12,24 +12,25 @@ DBJ_COMPONENT_VERSION_IMPLEMENTATION(0, 1, 0, "dbj vector component");
 // it is also generated here
 DBJ_COMPONENT_UNLOADER_IMPLEMENTATION;
 /* --------------------------------------------------------------------------------- */
-static struct dbj_vector_ dbj_vector_component_interface_implementation_ = {
-    .create = create_vector,
-    .destroy = destroy_vector,
-    .size = vector_size,
-    .capacity = vector_capacity,
-    .push = vector_push,
-    .insert = vector_insert,
-    .split = vector_split,
-    .at_c = vector_at_c,
-    .at = vector_at,
-    .swap = vector_swap,
-    .clear = vector_clear,
-    .erase = vector_erase};
+static struct dbj_vector_
+    interface_implementation_ = {
+        .create = create_vector,
+        .destroy = destroy_vector,
+        .size = vector_size,
+        .capacity = vector_capacity,
+        .push = vector_push,
+        .insert = vector_insert,
+        .split = vector_split,
+        .at_c = vector_at_c,
+        .at = vector_at,
+        .swap = vector_swap,
+        .clear = vector_clear,
+        .erase = vector_erase};
 /*
-single factory function has a mandatory name and returns
-a pointer to the component interface
+name is mandatory as mentioned in a def file
+return type is intreface struct pointer
 */
 struct dbj_vector_ *interface_factory(void)
 {
-    return &dbj_vector_component_interface_implementation_;
+    return &interface_implementation_;
 }
