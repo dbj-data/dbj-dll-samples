@@ -15,7 +15,7 @@
 &copy; 2020 - 2021 by dbj at dbj dot org
 
 
-# DBJ COMPONENT SYSTEM&trade; aka DBJCS
+# DBJ COMPONENT SYSTEM&trade; aka 'DBJ DLL'
 
 Why are today's component systems so complex, and difficult to use? Behind that very pompous name is attempt to architect and implement the simplest possible component system.
 
@@ -26,35 +26,39 @@ If some "feature" is missing we can always pull the card of simplicity as an exc
 ## How is this working?
 
 - one DBJ Component is one DLL
-- one component has one C struct that represents an interface that has one implementation
+- one component has one C struct that represents an interface with one implementation
 - All DBJ Components (DLLs) have the same def file. 
-  - This is it:
+  - This is it
 ```
 EXPORTS
 dbj_component_can_unload_now      PRIVATE
-interface_factory             PRIVATE
+interface_factory                 PRIVATE
 dbj_component_version             PRIVATE
 ```
 - thus each DBJ Component exports all of the three functions above
+  - there are no other functions exported. Ever. 
+  - no 'dll export' and no 'dll import' is necessary
+  - no lib to use dll is necessary
+    - we always dynamically load/unload DBJ DLL's
 - each component header has to have one string literal
   1. The component dll file name
 ```cpp
 // component_a.h
 #define COMPONENT_A_DLL_NAME "component_a.dll"
 ```
- - The component factory function name is always the name
+ - The component factory function name is always the same name
      - `"interface_factory"`
-     - that is the name (as exported) not the full function signature of the factory function
+     - that is the name (as exported) not the full function signature 
 - that is enough information to runtime load the dll (aka component) and get to the factory function `void *`
   - that is not enough to execute it yet
-- factory function returns a pointer to the single implementation of the component interface (a C struct)
+- factory function returns a pointer to the single implementation of the specific component
 ```cpp
 // from component_a.h
 // factory function declaration is not required
 // it is just implied
 // struct component_a * interface_factory(void);
 ``` 
-  - that interface is a struct and is the only thing required to de declared in the component header for users to use.
+  - that interface is a struct and is the only thing required to de declared in the component header for users to use. Example:
 ```cpp
 // component_a.h
 struct component_a {
@@ -66,7 +70,7 @@ struct component_a {
 ```
 For the factory function from a DLL aka "component" to be executed we need a function pointer that matches the  footprint of the factory function. Thus we do not need the factory function declaration.
 
-Again. Factory function does not have to be declared. It is defined by name in the `.def` file of the component and its full foot print is only implied. Allwe need is the factory function pointer so that we can use it after we load the component dll.
+Again. Factory function does not have to be declared. It is defined by name in the `.def` file of the component and its full foot print is only implied. All we need is the factory function pointer so that we can use it after we load the component dll. Example@
 ```cpp
 // component_a.h
 // factory function pointer declaration is required
@@ -74,7 +78,9 @@ typedef struct component_a * (component_a_factory_fp)(void);
 ```
 ### Let us clarify. 
 
-`dbj-component-loader.h` contains a macro that does it  all.  It allows user of dbj componet to code a callback that will receive a factory function pointer.
+(note: few details in here are subject to change)
+
+(our internal) `dbj-component-loader.h` contains "a macro that does it  all".  It allows user of dbj dll to use a callback that will receive a factory function pointer.
 ```cpp
 #define DBJCS_CALL(
 dll_name_, 
@@ -82,7 +88,7 @@ fun_name_,
 RFP,          // the factory function pointer 
 callback_)    // the callback where it is used   
 ```
-Synopsis of its core explains succinctly the workings of DBJCS:
+Synopsis of its core explains succinctly the workings of DBJ DLL:
 
 ```cpp
 // try and load the dll
@@ -98,7 +104,7 @@ if (function_)
 // Windows keeps it in a memory for a while
 dbjcs_dll_unload();
 ```
-Example: On the struct interface of the `component_a.dll` declared is a function pointer `get42` . The struct interface is declared like this:
+Example: On the struct interface of the `component_a.dll` declared is a function `get42` . The struct interface is declared like this:
 ```cpp
 // component_a.h
 struct component_a
@@ -111,7 +117,7 @@ Let us call that `get42` :
 
 - dll name
   - `"component_a.dll"`
-- factory function name; always the same
+- factory function name (always the same!)
   - `"interface_factory"`
 - factory function pointer of the exact component
   - `component_a_factory_fp` declared in `"component_a.h"`

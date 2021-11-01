@@ -9,7 +9,9 @@
             "type": "cppvsdbg",
             "request": "launch",
             "program": "${workspaceFolder}\\Build\\${fileBasenameNoExtension}.exe",
-            "args": [],
+            "args": [
+                "--help"
+            ],
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}\\Build",
             "environment": [],
