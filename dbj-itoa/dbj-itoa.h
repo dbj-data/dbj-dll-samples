@@ -1,11 +1,14 @@
 #pragma once
+#ifndef __clang__
+#error Obviously, this code requires clang compiler
+#endif
+
+#pragma clang system_header
 
 #include <errno.h>
 
 //  make sure build script creates this dll for this component
 #define DBJ_STRING_TOOLS_DLL_NAME "dbj-itoa.dll"
-
-// the one and only interface
 
 enum
 {
@@ -16,6 +19,7 @@ enum
 #define SAFE_BUF_LEN 0xF
 #endif // ! SAFE_BUF_LEN
 
+// the interface
 typedef struct dbj_itoa_ dbj_itoa;
 struct dbj_itoa_
 {
@@ -55,9 +59,9 @@ typedef dbj_itoa *(*dbj_itoa_ifp)(void);
 // each DBJ COMPONENT has the same def file
 //
 // EXPORTS
-// dbj_component_can_unload_now    PRIVATE
-// interface_factory           PRIVATE
-// dbj_component_version           PRIVATE
+// dbj_component_can_unload_now     PRIVATE
+// interface_factory                PRIVATE
+// dbj_component_version            PRIVATE
 //
 // functions in DLL are exported by name
 // not by full declaration
@@ -65,19 +69,16 @@ typedef dbj_itoa *(*dbj_itoa_ifp)(void);
 // but clients do need them declared as function pointers
 //
 // 'dbj_component_can_unload_now' and 'dbj_component_version'
-// have the same foot print for each components
+// have the same footprint for each component
 // in case you want to use them
 // their function pointers are declared in
 // dbj-component.h
 //
 
 // interface factory function for this component is implemented
-// inside the DLL as:
+// inside the DLL :
 //
-// struct dbj_strong *interface_factory(void)
-// {
-//     return &componenet_implementation_;
-// }
+// struct dbj_itoa_ *interface_factory(void);
 //
 // Of the three functions from the def file,
 // only the "interface_factory" has

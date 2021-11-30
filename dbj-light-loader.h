@@ -1,12 +1,14 @@
 #pragma once
-#ifdef __clang__
+#ifndef __clang__
+#error Obviously, this code requires clang compiler. How about clang-cl ?
+#else
 #pragma clang system_header
 #endif // __clang__
 /*
 (c)  2021 by dbj at dbj dot org, https://dbj.org/license_dbj
 
 this might be the only dll load/unload infrastructure one might need
-it all depend on if and what and when is OS caching 
+it all depends on if and what and when is OS caching 
 
 */
 #define WIN32_LEAN_AND_MEAN
@@ -21,7 +23,7 @@ it all depend on if and what and when is OS caching
 
 #ifdef _DEBUG
 /*
-this means we need to debug from Visual Studio or VS Code using inner terminal,
+this means we need to debug from Visual Studio (or VS Code using inner terminal),
 to actually see the debug output
 which in turn means we do not need to build console testing apps in that case
 */
@@ -47,7 +49,7 @@ These are well known and documented names, on the level of the DBJ CMS
 
 EXPORTS
 dbj_component_can_unload_now    PRIVATE
-interface_factory           PRIVATE
+interface_factory               PRIVATE
 dbj_component_version           PRIVATE
 */
 #define DBJCS_CAN_UNLOAD_NAME "dbj_component_can_unload_now"
@@ -159,20 +161,34 @@ each DBJ DLL header declares a function pointer to that function
 
 example: dbj_itoa.h is a header for dbj_itoa.dll
 
-interface is one struct:
-struct dbj_itoa {  ... };
+interface is one struct:        struct dbj_itoa {  ... };
 
-fp to a factory function returning pointer to its interface:
-typedef dbj_itoa *(*dbj_itoa_ifp)(void);
+example: fp of a factory function returning pointer to that interface:
 
-DLL def file declares exported function ONLY by a name;
+typedef struct dbj_itoa *(*dbj_itoa_ifp)(void);
+
+NOTE: DLL def file declares exported function ONLY by a name;
 dbj_itoa.def is the same as any other dbj dll def; you just copy the def; it is always the same
 
 EXPORTS
 dbj_component_can_unload_now    PRIVATE
 interface_factory               PRIVATE
 dbj_component_version           PRIVATE
+
+obtain the pointer to the interface
 */
 #define DBJ_DLL_IFP(FP_, N_, DLLHANDLE_) FP_ N_ = (FP_)dbj_dll_get_function(&DLLHANDLE_, DBJCS_FACTORYNAME)
+
+// __typeof__ is 20+ years old, GCC extension not in the ISO C standard; yet
+#define DBJ_TYPE_OF(IFACE_PTR_METHOD_NAME) \
+    __typeof__(IFACE_PTR_METHOD_NAME)
+/*
+  DBJ_DLL_IFP( dbj_itoa_ifp, interface, handle_to_dbj_itoa_dll ) ;
+
+  to obtain and hold, a functon pointer to a method on that interface we use
+  20+ years old GCC extension not in the ISO C standard; yet
+
+    DBJ_TYPE_OF(interface_->itoa) itoa_func = interface_->itoa;
+*/
 
 #pragma endregion // infrastructure
