@@ -2,6 +2,9 @@
 #include "../dbj-itoa.h"
 #include "../../dbj-light-loader.h"
 
+#define DBJ_REVERSE_TEST
+#include "../src/dbj_reverse.h" // dbj_reverse_test()
+
 extern int test_decimal_from(dbj_itoa *);
 int itoa_test(dbj_itoa *);
 
@@ -10,6 +13,9 @@ int itoa_test(dbj_itoa *);
 */
 int main(int argc, char **argv)
 {
+    // just a quick ad-hoc dbj reverse test
+    dbj_reverse_test();
+
     HINSTANCE dll_handle_ = dbj_dll_load(DBJ_STRING_TOOLS_DLL_NAME);
 
     if (0 == dll_handle_)

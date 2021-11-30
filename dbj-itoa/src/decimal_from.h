@@ -11,44 +11,14 @@ DBJ: transformed to C11
 #include "dbj_clang_ignore_warnings.h"
 DBJ_DISABLE_4996
 
-#include <string.h>
-#include <stddef.h>
+#include "dbj_reverse.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-	// https://stackoverflow.com/a/3983089/10870835
-	static inline void jens_g_swap_detail(void *p1, void *p2, void *tmp, size_t pSize)
-	{
-		memcpy(tmp, p1, pSize);
-		memcpy(p1, p2, pSize);
-		memcpy(p2, tmp, pSize);
-	}
-
-#define JENS_G_SWAP(a, b)                                                \
-	jens_g_swap_detail(                                                  \
-		&(a),                                                            \
-		&(b),                                                            \
-		(char[(sizeof(a) == sizeof(b)) ? (ptrdiff_t)sizeof(a) : -1]){0}, \
-		sizeof(a))
-
-	// std::iter swap as C macro
-#define DBJ_ITER_SWAP(a, b) JENS_G_SWAP(*a, *b)
-
-// std::reverse in C
-// NOTE: first and last must be real pointers not undecayed arrays
-#define DBJ_REVERSE(first, last)                     \
-	do                                               \
-	{                                                \
-		while ((first != last) && (first != --last)) \
-		{                                            \
-			DBJ_ITER_SWAP(first++, last);            \
-		}                                            \
-	} while (0)
-
-	// DBJ: this has some computational problems
+	// DBJ: this maybe has some computational problems
 	// but it is fast
 	static inline void unsigned_to_decimal(unsigned long number, char *buffer)
 	{
