@@ -13,6 +13,26 @@ dbj_component_can_unload_now    PRIVATE
 interface_factory           PRIVATE
 dbj_component_version           PRIVATE
 
+NOTE:
+
+A module-definition or DEF file (*.def) is a text file containing one or more 
+module statements that describe various attributes of a DLL. 
+If you are not using the __declspec(dllexport) keyword to export the DLL's functions, 
+the DLL requires a DEF file.
+
+DITTO: 
+
+Visual Studio will hapilly build dll without a def files.
+
+YOU MUST!
+
+Create the DEF file yourself and add it to your project. Then go to Project >
+Properties > Linker > Input > Module Definition File and enter the name of the
+DEF file. Repeat this step for each configuration and platform, or do it all at
+once by selecting Configuration = All Configurations, and Platform = All
+Platforms.
+
+
 */
 
 #ifdef __cplusplus
@@ -39,7 +59,7 @@ DBJ_EXTERN_C_BEGIN
 // dbj_component_can_unload_now is part of each dbj-component definition
 // use this macro to implement it inside a component dll
 // dbj_component_can_unload_now() is required by dbj-component-loader
-#define DBJ_COMPONENT_UNLOADER_IMPLEMENTATION                     \
+#define DBJ_COMPONENT_UNLOADER_IMPLEMENTATION(...)                \
     static volatile long component_counter_ = 0;                  \
                                                                   \
     __attribute__((constructor)) static void component_ctor(void) \
@@ -115,9 +135,9 @@ typedef struct dbj_component_version_ (*DBJ_COMPONENT_SEMVER_FP)(void);
 typedef bool (*DBJ_COMPONENT_UNLOAD_FP)(void);
 
 /*
-factory function differs becuase it returns a pointer to the struct
+factory function differs because it returns a pointer to the struct
 that represents the component interface
-We could made it return void *, but that would impose potentialy run-time consuming casting
+We could made it return void *, but that would impose performace consuming casting
 */
 
 DBJ_EXTERN_C_END

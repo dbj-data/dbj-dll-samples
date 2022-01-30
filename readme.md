@@ -25,6 +25,28 @@ If some "feature" is missing we can always pull the card of simplicity as an exc
 
 ## How is this working?
 
+### Important note
+```
+NOTE:
+
+A module-definition or DEF file (*.def) is a text file containing one or more 
+module statements that describe various attributes of a DLL. 
+If you are not using the __declspec(dllexport) keyword to export the DLL's functions, 
+the DLL requires a DEF file.
+
+DITTO: 
+
+Visual Studio will hapilly build dll without a def files.
+
+YOU MUST!
+
+Create the DEF file yourself and add it to your project. Then go to Project >
+Properties > Linker > Input > Module Definition File and enter the name of the
+DEF file. Repeat this step for each configuration and platform, or do it all at
+once by selecting Configuration = All Configurations, and Platform = All
+Platforms.
+```
+
 - one DBJ Component is one DLL
 - one component has one C struct that represents an interface with one implementation
 - All DBJ Components (DLLs) have the same def file. 
